@@ -38,17 +38,19 @@ const Wipe = styled(motion.div)`
 `
 
 interface ImageSliderProps {
-  loaded: boolean
-  onLoaded: () => void
+  complete: boolean
+  onComplete: () => void
 }
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ loaded, onLoaded }) => {
+const ImageSlider: React.FC<ImageSliderProps> = ({ complete, onComplete }) => {
   const [startSlider, setStartSlider] = React.useState(false)
   const isMobile = useIsMobile()
+  const [imageLoaded, setImageLoaded] = React.useState(false)
 
   const activeSlide = useSlider({
-    run: startSlider || isMobile,
+    run: complete && (startSlider || isMobile),
     numberOfSlides: images.length,
+    speed: isMobile ? 1500 : 500,
   })
 
   return (
@@ -62,12 +64,13 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ loaded, onLoaded }) => {
             {idx === 0 ? (
               <>
                 <Wipe
-                  animate={{ y: loaded ? '-100%' : '0' }}
+                  animate={{ y: imageLoaded ? '-100%' : '0' }}
                   transition={{
                     type: 'easeIn',
                     duration: 0.6,
                     delay: 0.2,
                   }}
+                  onAnimationComplete={onComplete}
                 />
                 <Image
                   priority
@@ -76,12 +79,13 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ loaded, onLoaded }) => {
                   src={img}
                   layout="responsive"
                   alt="Portrait of me"
-                  onLoadingComplete={onLoaded}
+                  onLoadingComplete={() => setImageLoaded(true)}
                 />
               </>
             ) : (
               <>
                 <Image
+                  priority
                   width={800}
                   height={1000}
                   src={img}

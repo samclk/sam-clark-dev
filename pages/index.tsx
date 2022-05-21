@@ -113,7 +113,7 @@ const Home: NextPage = () => {
                 opacity: formIsVisible ? 0.2 : 1,
               }
             : {
-                y: formIsVisible ? '20%' : 0,
+                y: formIsVisible ? '10%' : 0,
                 opacity: formIsVisible ? 0.2 : 1,
               }
         }
@@ -126,19 +126,19 @@ const Home: NextPage = () => {
             animate={
               isTablet
                 ? {
-                    x: imageLoaded ? '-1rem' : '0',
-                    y: imageLoaded ? '-1rem' : '0',
+                    x: '-1rem',
+                    y: '-1rem',
                   }
                 : {
-                    x: imageLoaded ? '-.5rem' : '0',
-                    y: imageLoaded ? '-.5rem' : '0',
+                    x: '-.5rem',
+                    y: '-.5rem',
                   }
             }
             transition={{ type: 'ease', duration: 0.2, delay: 0.6 }}
           />
           <ImageSlider
-            loaded={imageLoaded}
-            onLoaded={() => setImageLoaded(true)}
+            complete={imageLoaded}
+            onComplete={() => setImageLoaded(true)}
           />
         </ImageContainer>
         <TextContainer
