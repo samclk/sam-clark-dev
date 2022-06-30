@@ -75,7 +75,7 @@ const Home: NextPage = () => {
           <h1 className="pointer-events-none m-0 text-4xl lg:text-7xl">
             Sam Clark
           </h1>
-          <h2 className="pointer-events-none m-0 text-2xl lg:text-4xl">
+          <h2 className="pointer-events-none m-0 text-xl lg:text-4xl">
             Developer, UI &amp; UX
           </h2>
           <div className="mt-4 flex items-center lg:mt-8">
