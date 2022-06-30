@@ -1,41 +1,9 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { images } from '../../data/images'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import useSlider from '../../hooks/useSlider'
 import { useIsMobile } from '../../hooks/useMediaQuery'
-
-const Slides = styled.div`
-  position: relative;
-  background-color: var(--neutral);
-`
-
-const Slide = styled.div<{ active: boolean }>`
-  height: 100%;
-  width: 100%;
-  top: 0px;
-  left: 0px;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  opacity: ${(p) => (p.active ? '1' : '0')};
-
-  &:not(:first-child) {
-    position: absolute;
-    z-index: 1;
-  }
-`
-
-const Wipe = styled(motion.div)`
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: var(--neutral);
-  z-index: 2;
-`
 
 interface ImageSliderProps {
   complete: boolean
@@ -54,16 +22,25 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ complete, onComplete }) => {
   })
 
   return (
-    <Slides
+    <div
+      className="relative"
       onMouseEnter={() => setStartSlider(true)}
       onMouseLeave={() => setStartSlider(false)}
     >
       {images.map((img, idx) => {
+        const isActiveSlide = activeSlide === idx
+
         return (
-          <Slide key={idx} active={activeSlide === idx}>
+          <div
+            className={`absolute top-0 left-0 z-10 h-full w-full overflow-hidden first:relative first:z-20 ${
+              isActiveSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+            key={idx}
+          >
             {idx === 0 ? (
               <>
-                <Wipe
+                <motion.div
+                  className="absolute top-0 left-0 z-20 h-full w-full bg-white"
                   animate={{ y: imageLoaded ? '-100%' : '0' }}
                   transition={{
                     type: 'easeIn',
@@ -94,10 +71,10 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ complete, onComplete }) => {
                 />
               </>
             )}
-          </Slide>
+          </div>
         )
       })}
-    </Slides>
+    </div>
   )
 }
 
