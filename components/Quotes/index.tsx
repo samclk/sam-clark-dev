@@ -1,45 +1,10 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { quotes } from '../../data/quotes'
 import useSlider from '../../hooks/useSlider'
 
 interface QuotesProps {
   isVisible: boolean
 }
-
-const Wrapper = styled.div`
-  position: relative;
-`
-
-const Container = styled.div<{ active: boolean }>`
-  opacity: ${(p) => (p.active ? '1' : '0')};
-  transition: opacity 1000ms;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-
-  &:first-child {
-    position: static;
-  }
-`
-
-const Text = styled.blockquote`
-  color: var(--neutral);
-  font-style: italic;
-  margin: 0px;
-  font-weight: 300;
-  font-size: 0.8rem;
-  line-height: 1.2rem;
-  color: var(--neutral-800);
-`
-
-const Caption = styled.figcaption`
-  color: var(--neutral);
-  display: block;
-  text-align: right;
-  font-size: 0.6rem;
-  margin-top: 0.6rem;
-`
 
 const Quotes: React.FC<QuotesProps> = ({ isVisible }) => {
   const activeQuote = useSlider({
@@ -49,16 +14,27 @@ const Quotes: React.FC<QuotesProps> = ({ isVisible }) => {
   })
 
   return (
-    <Wrapper>
+    <div className="relative">
       {quotes.map((quote, idx) => {
+        const isActiveQuote = activeQuote === idx
+
         return (
-          <Container key={idx} active={activeQuote === idx}>
-            <Text>{quote.text}</Text>
-            <Caption>{quote.cite}</Caption>
-          </Container>
+          <div
+            className={`absolute top-0 left-0 first:static ${
+              isActiveQuote ? 'opacity-100' : 'opacity-0'
+            }`}
+            key={idx}
+          >
+            <blockquote className="m-0 text-xs italic text-gray-200">
+              {quote.text}
+            </blockquote>
+            <figcaption className="mt-2 block text-right text-xs text-white">
+              {quote.cite}
+            </figcaption>
+          </div>
         )
       })}
-    </Wrapper>
+    </div>
   )
 }
 
