@@ -20,7 +20,7 @@ const Quotes: React.FC<QuotesProps> = ({ isVisible }) => {
 
         return (
           <div
-            className={`absolute top-0 left-0 first:static ${
+            className={`absolute top-0 left-0 w-full first:static  ${
               isActiveQuote ? 'opacity-100' : 'opacity-0'
             }`}
             key={idx}

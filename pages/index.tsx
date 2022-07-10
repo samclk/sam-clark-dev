@@ -78,7 +78,15 @@ const Home: NextPage = () => {
           <h2 className="pointer-events-none m-0 text-xl lg:text-4xl">
             Developer, UI &amp; UX
           </h2>
-          <div className="mt-4 flex items-center lg:mt-8">
+          <motion.p
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: 'tween', delay: 0.6, duration: 1.5 }}
+            className="pointer-events-none mt-2 text-right font-code text-xs text-gray-500"
+          >
+            52.7517° N, 0.4023° E
+          </motion.p>
+          <div className="mt-4 flex items-center">
             <button
               className="cursor-pointer border-2 border-black bg-transparent py-2 px-4 text-sm uppercase hover:border-pink-500 hover:bg-pink-500"
               onClick={() => setFormIsVisible(true)}
