@@ -5,6 +5,7 @@ import { useIsTablet } from '../hooks/useMediaQuery'
 import Socials from '../components/Socials'
 import ContactForm from '../components/ContactForm'
 import ImageSlider from '../components/ImageSlider'
+import Head from 'next/head'
 
 const Home: NextPage = () => {
   const [imageLoaded, setImageLoaded] = React.useState(false)
@@ -22,6 +23,10 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Sam Clark | Developer, UI &amp; UX</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <motion.div
         className="mx-auto flex min-h-screen w-full items-center justify-center px-4"
         animate={
