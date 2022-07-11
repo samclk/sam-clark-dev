@@ -283,7 +283,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                 </Form>
               )}
             </Formik>
-            <div className="mt-16">
+            <div className="mt-16 md:hidden">
               <Quotes isVisible={isVisible} />
             </div>
           </motion.div>
