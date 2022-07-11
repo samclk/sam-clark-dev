@@ -3,6 +3,7 @@ import { Formik, FormikHelpers, Form, Field } from 'formik'
 import FormWrapper from '../FormWrapper'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import * as Yup from 'yup'
+import Quotes from '../Quotes'
 
 interface ContactFormProps {
   isVisible: boolean
@@ -282,6 +283,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                 </Form>
               )}
             </Formik>
+            <div className="mt-16">
+              <Quotes isVisible={isVisible} />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

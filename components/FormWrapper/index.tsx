@@ -51,9 +51,6 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ isVisible, children }) => {
           >
             {children}
           </motion.div>
-          <div className="mb-16">
-            <Quotes isVisible={isVisible} />
-          </div>
         </motion.div>
       )}
     </>
