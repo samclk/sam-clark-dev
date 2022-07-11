@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Formik, FormikHelpers, Form, Field } from 'formik'
 import FormWrapper from '../FormWrapper'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
+import * as Yup from 'yup'
 
 interface ContactFormProps {
   isVisible: boolean
@@ -124,6 +125,22 @@ const ConfirmationMessage: React.FC<ConfirmationMessageProps> = ({ name }) => {
   )
 }
 
+const ContactSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  lastName: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
+  brief: Yup.string()
+    .min(30, 'Too Short!')
+    .max(1000, 'Too Long!')
+    .required('Required'),
+})
+
 const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
   const [completed, setCompleted] = React.useState(false)
   const [sentname, setSentname] = React.useState('')
@@ -149,6 +166,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                 email: '',
                 brief: '',
               }}
+              validationSchema={ContactSchema}
               onSubmit={async (
                 values: Values,
                 { setSubmitting }: FormikHelpers<Values>
@@ -166,80 +184,103 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                 }
               }}
             >
-              <Form>
-                <div className="mb-4">
-                  <label
-                    className="mb-2 block text-xs uppercase text-white"
-                    htmlFor="firstName"
-                  >
-                    First Name
-                  </label>
-                  <Field
-                    className="w-full py-2 px-4"
-                    id="firstName"
-                    name="firstName"
-                  />
-                </div>
+              {({ errors, touched }) => (
+                <Form>
+                  <div className="mb-4">
+                    <label
+                      className="mb-2 block text-xs uppercase text-white"
+                      htmlFor="firstName"
+                    >
+                      First Name
+                    </label>
+                    <Field
+                      className="w-full py-2 px-4"
+                      id="firstName"
+                      name="firstName"
+                    />
+                    {errors.firstName && touched.firstName ? (
+                      <span className="mt-2 text-xs uppercase text-red-500">
+                        {errors.firstName}
+                      </span>
+                    ) : null}
+                  </div>
 
-                <div className="mb-4">
-                  <label
-                    className="mb-2 block text-xs uppercase text-white"
-                    htmlFor="lastName"
-                  >
-                    Last Name
-                  </label>
-                  <Field
-                    className="w-full py-2 px-4"
-                    id="lastName"
-                    name="lastName"
-                  />
-                </div>
+                  <div className="mb-4">
+                    <label
+                      className="mb-2 block text-xs uppercase text-white"
+                      htmlFor="lastName"
+                    >
+                      Last Name
+                    </label>
+                    <Field
+                      className="w-full py-2 px-4"
+                      id="lastName"
+                      name="lastName"
+                    />
+                    {errors.lastName && touched.lastName ? (
+                      <span className="mt-2 text-xs uppercase text-red-500">
+                        {errors.lastName}
+                      </span>
+                    ) : null}
+                  </div>
 
-                <div className="mb-4">
-                  <label
-                    className="mb-2 block text-xs uppercase text-white"
-                    htmlFor="email"
-                  >
-                    Email
-                  </label>
-                  <Field
-                    className="w-full py-2 px-4"
-                    id="email"
-                    name="email"
-                    type="email"
-                  />
-                </div>
+                  <div className="mb-4">
+                    <label
+                      className="mb-2 block text-xs uppercase text-white"
+                      htmlFor="email"
+                    >
+                      Email
+                    </label>
+                    <Field
+                      className="w-full py-2 px-4"
+                      id="email"
+                      name="email"
+                      type="email"
+                    />
+                    {errors.email && touched.email ? (
+                      <span className="mt-2 text-xs uppercase text-red-500">
+                        {errors.email}
+                      </span>
+                    ) : null}
+                  </div>
 
-                <div className="mb-4">
-                  <label
-                    className="mb-2 block text-xs uppercase text-white"
-                    htmlFor="brief"
-                  >
-                    Brief description
-                  </label>
-                  <Field
-                    className="w-full min-w-full max-w-full py-2 px-4"
-                    as="textarea"
-                    id="brief"
-                    name="brief"
-                  />
-                </div>
+                  <div className="mb-4">
+                    <label
+                      className="mb-2 block text-xs uppercase text-white"
+                      htmlFor="brief"
+                    >
+                      Brief description
+                    </label>
+                    <Field
+                      className="w-full min-w-full max-w-full py-2 px-4"
+                      as="textarea"
+                      id="brief"
+                      name="brief"
+                      placeholder="maximum 1000 characters"
+                    />
+                    {errors.brief && touched.brief ? (
+                      <span className="mt-2 text-xs uppercase text-red-500">
+                        {errors.brief}
+                      </span>
+                    ) : null}
+                  </div>
 
-                <div className="flex items-center justify-between">
-                  <button
-                    className="cursor-pointer border-2 border-white bg-transparent py-2 px-4 text-xs uppercase text-white hover:bg-white hover:text-black"
-                    type="submit"
-                  >
-                    Send
-                  </button>
-                  <a
-                    className="block border-0 text-xs uppercase text-white lg:hidden"
-                    onClick={closeForm}
-                  >
-                    Back
-                  </a>
-                </div>
-              </Form>
+                  <div className="flex items-center justify-between">
+                    <button
+                      className="cursor-pointer border-2 border-white bg-transparent py-2 px-4 text-xs uppercase text-white hover:bg-white hover:text-black"
+                      type="submit"
+                    >
+                      Send
+                    </button>
+                    <a
+                      className="block border-0 text-xs uppercase text-white lg:hidden"
+                      onClick={closeForm}
+                    >
+                      Back
+                    </a>
+                  </div>
+                </Form>
+              )}
             </Formik>
           </motion.div>
         )}
