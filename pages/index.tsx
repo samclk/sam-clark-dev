@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         <meta name="twitter:creator" content="@srclark_"></meta>
       </Head>
       <motion.div
-        className="fixed mx-auto flex min-h-screen w-full items-center justify-center px-4"
+        className="fixed mx-auto flex w-full items-center justify-center px-4 pt-[30vh] md:min-h-screen md:pt-0"
         animate={
           isTablet
             ? {

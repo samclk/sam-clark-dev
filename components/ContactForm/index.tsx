@@ -273,7 +273,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                       Send
                     </button>
                     <a
-                      className="block border-0 text-xs uppercase text-white lg:hidden"
+                      className="block cursor-pointer border-0 text-xs uppercase text-white lg:hidden"
                       onClick={closeForm}
                     >
                       Back
