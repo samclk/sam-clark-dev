@@ -4,7 +4,6 @@ import sendgrid from '@sendgrid/mail'
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
 
 const handler: NextApiHandler = (req, res) => {
-  console.log({ fire: process.env.SENDGRID_API_KEY })
   if (!process.env.SENDGRID_API_KEY) {
     res.status(500).json({ reason: `Missing env variable` })
   }
@@ -25,9 +24,14 @@ const handler: NextApiHandler = (req, res) => {
     html: message.replace(/\r\n/g, '<br>'),
   }
 
-  sendgrid.send(data)
+  try {
+    sendgrid.send(data)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ reason: 'Could not send mail' })
+  }
 
-  res.status(200).json({ name: 'John Doe' })
+  res.status(200).json({ name: 'Email sent' })
 }
 
 export default handler
