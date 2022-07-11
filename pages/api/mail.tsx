@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next'
 import sendgrid from '@sendgrid/mail'
 
-const handler: NextApiHandler = (req, res) => {
+const handler: NextApiHandler = async (req, res) => {
   sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
   if (!process.env.SENDGRID_API_KEY) {
     res.status(500).json({ reason: `Missing env variable` })
@@ -24,13 +24,11 @@ const handler: NextApiHandler = (req, res) => {
   }
 
   try {
-    sendgrid.send(data)
+    await sendgrid.send(data)
+    res.status(200).json({ name: 'Email sent' })
   } catch (error) {
-    console.log(error)
     res.status(500).json({ reason: 'Could not send mail' })
   }
-
-  res.status(200).json({ name: 'Email sent' })
 }
 
 export default handler
