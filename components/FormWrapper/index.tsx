@@ -36,7 +36,7 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ isVisible, children }) => {
       )}
       {!isTablet && (
         <motion.div
-          className="fixed left-0 top-0 z-30 box-border flex h-screen w-full -translate-y-full flex-col justify-between bg-black p-8 lg:right-0 lg:left-auto lg:w-40 lg:max-w-md lg:translate-x-full"
+          className="fixed left-0 top-0 z-30 box-border flex h-screen w-full -translate-y-full flex-col justify-between overflow-y-scroll bg-black p-8 lg:right-0 lg:left-auto lg:w-40 lg:max-w-md lg:translate-x-full"
           initial={{ y: '-100%' }}
           animate={{ y: isVisible ? 0 : '-100%' }}
           transition={{ type: 'easeOut', duration: 0.4 }}
