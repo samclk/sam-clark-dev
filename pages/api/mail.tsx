@@ -1,9 +1,8 @@
 import { NextApiHandler } from 'next'
 import sendgrid from '@sendgrid/mail'
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
-
 const handler: NextApiHandler = (req, res) => {
+  sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string)
   if (!process.env.SENDGRID_API_KEY) {
     res.status(500).json({ reason: `Missing env variable` })
   }
