@@ -25,7 +25,7 @@ const About: React.FC<AboutProps> = ({ closeAbout }) => {
             type: 'tween',
             ease: 'easeOut',
           }}
-          className="absolute -right-4 -z-10 h-1/2 w-1/2"
+          className="fixed -right-4 -z-10 h-1/2 w-1/2 md:absolute"
         >
           <Image
             src="/me/family.jpg"

@@ -35,7 +35,7 @@ const Socials: React.FC = () => {
       variants={SocialVariants}
       initial="hidden"
       animate="show"
-      className="fixed mt-4 flex w-full justify-center gap-3"
+      className="fixed z-50 mt-4 flex w-full justify-center gap-3"
     >
       {socials.map((social, idx) => {
         return (
