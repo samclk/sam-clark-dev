@@ -29,6 +29,7 @@ const About: React.FC<AboutProps> = ({ closeAbout }) => {
         >
           <Image
             src="/me/family.jpg"
+            priority
             width={800}
             height={1000}
             layout="responsive"
@@ -39,7 +40,7 @@ const About: React.FC<AboutProps> = ({ closeAbout }) => {
           Hi, I’m <span className="text-pink-600">Sam</span>
         </h2>
         <p className="mb-6">
-          A freelance web developer based in King’s Lynn. I have over 8 years
+          A freelance web developer based in King’s Lynn. I have 10 years
           experience working in creative design agencies on a variety of
           projects from start ups to established applications.
         </p>
