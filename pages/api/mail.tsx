@@ -22,6 +22,7 @@ const handler: NextApiHandler = async (req, res) => {
   const data = {
     to: EMAIL_TO,
     from: EMAIL_FROM,
+    replyTo: body.email,
     subject: '[Sam Clark Dev] Contact Form - New Message',
     text: message,
     html: message.replace(/\r\n/g, '<br>'),
