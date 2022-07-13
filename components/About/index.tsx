@@ -7,6 +7,8 @@ interface AboutProps {
 }
 
 const About: React.FC<AboutProps> = ({ closeAbout }) => {
+  const [imageLoaded, setImageLoaded] = React.useState(false)
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -18,7 +20,7 @@ const About: React.FC<AboutProps> = ({ closeAbout }) => {
       <div className="relative mb-8">
         <motion.div
           initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 0.2, x: 0 }}
+          animate={imageLoaded ? { opacity: 0.2, x: 0 } : { opacity: 0, x: 30 }}
           transition={{
             delay: 0.2,
             duration: 1,
@@ -34,6 +36,7 @@ const About: React.FC<AboutProps> = ({ closeAbout }) => {
             height={1000}
             layout="responsive"
             alt="Photo of family"
+            onLoadingComplete={() => setImageLoaded(true)}
           />
         </motion.div>
         <h2 className="mb-8 text-2xl">
