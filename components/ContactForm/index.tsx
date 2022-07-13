@@ -4,6 +4,7 @@ import FormWrapper from '../FormWrapper'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import * as Yup from 'yup'
 import Quotes from '../Quotes'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 
 interface ContactFormProps {
   isVisible: boolean
@@ -267,18 +268,19 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                   </div>
 
                   <div className="flex items-center justify-between">
+                    <a
+                      className="flex cursor-pointer items-center border-0 text-xs uppercase text-white lg:hidden"
+                      onClick={closeForm}
+                    >
+                      <AiOutlineArrowLeft />
+                      Back
+                    </a>
                     <button
                       className="cursor-pointer border-2 border-white bg-transparent py-2 px-4 text-xs uppercase text-white hover:bg-white hover:text-black"
                       type="submit"
                     >
                       Send
                     </button>
-                    <a
-                      className="block cursor-pointer border-0 text-xs uppercase text-white lg:hidden"
-                      onClick={closeForm}
-                    >
-                      Back
-                    </a>
                   </div>
                 </Form>
               )}
