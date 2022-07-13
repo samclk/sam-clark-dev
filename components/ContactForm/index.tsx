@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Formik, FormikHelpers, Form, Field } from 'formik'
+import { Formik, FormikHelpers, Form, Field, FieldProps } from 'formik'
 import FormWrapper from '../FormWrapper'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import * as Yup from 'yup'
@@ -139,7 +139,7 @@ const ContactSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   brief: Yup.string()
     .min(30, 'Too Short!')
-    .max(1000, 'Too Long!')
+    .max(500, 'Too Long!')
     .required('Required'),
 })
 
@@ -247,24 +247,36 @@ const ContactForm: React.FC<ContactFormProps> = ({ isVisible, closeForm }) => {
                   </div>
 
                   <div className="mb-4">
-                    <label
-                      className="mb-2 block text-xs uppercase text-white"
-                      htmlFor="brief"
-                    >
-                      Brief description
-                    </label>
-                    <Field
-                      className="w-full min-w-full max-w-full py-2 px-4"
-                      as="textarea"
-                      id="brief"
-                      name="brief"
-                      placeholder="maximum 1000 characters"
-                    />
-                    {errors.brief && touched.brief ? (
-                      <span className="mt-2 text-xs uppercase text-red-500">
-                        {errors.brief}
-                      </span>
-                    ) : null}
+                    <Field name="brief">
+                      {({ field, meta }: FieldProps) => (
+                        <>
+                          <label
+                            className="mb-2 flex justify-between text-xs uppercase text-white"
+                            htmlFor="brief"
+                          >
+                            Brief description
+                            <span
+                              className={
+                                meta.touched && meta.error
+                                  ? 'text-red-500'
+                                  : 'text-gray-500'
+                              }
+                            >
+                              {field.value.length}/500
+                            </span>
+                          </label>
+                          <textarea
+                            className="w-full min-w-full max-w-full py-2 px-4"
+                            {...field}
+                          />
+                          {meta.touched && meta.error && (
+                            <span className="mt-2 text-xs uppercase text-red-500">
+                              {meta.error}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </Field>
                   </div>
 
                   <div className="flex items-center justify-between">
