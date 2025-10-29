@@ -5,7 +5,7 @@ import Autoplay from 'embla-carousel-autoplay';
 const SLIDES = ['Senior Full Stack Developer', 'Contractor at Intercom', 'Available from June 2026'];
 
 export const JobMarquee = () => {
-  const [emblaRef] = useEmblaCarousel({ axis: 'y', loop: true }, [Autoplay()]);
+  const [emblaRef] = useEmblaCarousel({ axis: 'y', loop: true, watchDrag: false }, [Autoplay()]);
   return (
     <section>
       <div className="overflow-hidden" ref={emblaRef}>

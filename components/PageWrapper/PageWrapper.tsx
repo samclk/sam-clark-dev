@@ -10,11 +10,21 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     () => {
       const tl = gsap.timeline();
 
-      tl.from('#blur-image', {
-        opacity: 0,
+      tl.to('#blur-image', {
+        opacity: 1,
         duration: 2,
         ease: 'power2.inOut',
       });
+
+      tl.to(
+        '#noise',
+        {
+          opacity: 1,
+          duration: 3,
+          ease: 'power2.inOut',
+        },
+        '<',
+      );
 
       tl.from(
         '#blur-image',
@@ -80,6 +90,10 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="relative h-screen w-screen overflow-hidden" ref={pageWrapperRef}>
       {children}
+      <div
+        id="noise"
+        className='animate-noise user-select-none pointer-events-none fixed inset-0 -top-1/2 -left-1/2 z-50 h-[200%] w-[200%] bg-[url("/noise.png")] bg-repeat opacity-0'
+      ></div>
     </div>
   );
 };

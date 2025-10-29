@@ -30,7 +30,7 @@ export const MaskEffect = () => {
   });
 
   return (
-    <div className="absolute h-screen w-screen">
+    <div className="user-select-none pointer-events-none absolute h-screen w-screen">
       <Image
         src="/me/me-mobile.jpg"
         id="blur-image"
@@ -38,7 +38,7 @@ export const MaskEffect = () => {
         width={1080}
         height={1920}
         priority
-        className="h-full w-full object-cover object-center lg:hidden"
+        className="h-full w-full object-cover object-center opacity-0 lg:hidden"
       />
       <Image
         src="/me/me-blur.jpg"
@@ -47,7 +47,7 @@ export const MaskEffect = () => {
         width={1920}
         height={1080}
         priority
-        className="hidden h-full w-full object-cover object-center lg:block"
+        className="hidden h-full w-full object-cover object-center opacity-0 lg:block"
       />
       <Image
         ref={maskRef}
