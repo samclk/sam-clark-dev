@@ -2,6 +2,9 @@
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import * as React from 'react';
+import { ScrambleTextPlugin } from 'gsap/all';
+
+gsap.registerPlugin(ScrambleTextPlugin);
 
 export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   const pageWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -10,21 +13,47 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     () => {
       const tl = gsap.timeline();
 
+      tl.to('#noise', {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.inOut',
+      });
+
+      tl.fromTo(
+        '#pre-loader-text',
+        {
+          y: 10,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.inOut',
+        },
+      );
+
+      tl.to(
+        '#pre-loader-bar',
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 2,
+          ease: 'power2.inOut',
+        },
+        '>-0.3',
+      );
+
+      tl.to('#pre-loader', {
+        clipPath: 'inset(0 0% 100% 0)',
+        duration: 0.6,
+        ease: 'power2.inOut',
+      });
+
       tl.to('#blur-image', {
         opacity: 1,
         duration: 2,
         ease: 'power2.inOut',
       });
-
-      tl.to(
-        '#noise',
-        {
-          opacity: 1,
-          duration: 3,
-          ease: 'power2.inOut',
-        },
-        '<',
-      );
 
       tl.from(
         '#blur-image',
@@ -65,14 +94,35 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
         },
         '>-0.2',
       );
-      tl.from(
+      tl.to(
         '#overlay-container',
         {
-          clipPath: 'inset(0 100% 0 0)',
-          duration: 0.4,
-          ease: 'circ.inOut',
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 1,
+          ease: 'power2.inOut',
         },
         '>-0.4',
+      );
+      tl.to(
+        '#coords',
+        {
+          opacity: 1,
+          duration: 0.2,
+          ease: 'power2.inOut',
+        },
+        '<0.1',
+      );
+      tl.to(
+        '#coords',
+        {
+          scrambleText: {
+            text: '52.7517° N, 0.4023° E',
+            chars: '0123456789',
+            speed: 0.3,
+          },
+          duration: 3,
+        },
+        '<0.1',
       );
 
       tl.to(
@@ -82,7 +132,7 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
           duration: 0.4,
           ease: 'power2.inOut',
         },
-        '>-0.1',
+        '>-2.2',
       );
     },
     { scope: pageWrapperRef },

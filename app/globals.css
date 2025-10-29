@@ -55,6 +55,6 @@
   }
 
   body {
-    @apply bg-paper h-full w-full;
+    @apply h-full w-full bg-black;
   }
 }

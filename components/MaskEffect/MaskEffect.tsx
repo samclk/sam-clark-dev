@@ -18,11 +18,11 @@ export const MaskEffect = () => {
     // Use quickTo for smooth, performant animation with easing
     // quickTo reuses the same tween internally, avoiding performance overhead
     const setX = gsap.quickTo(maskRef.current, xVar, {
-      duration: 2,
+      duration: 1.4,
       ease: 'power2.out',
     });
     const setY = gsap.quickTo(maskRef.current, yVar, {
-      duration: 2,
+      duration: 1.4,
       ease: 'power2.out',
     });
 

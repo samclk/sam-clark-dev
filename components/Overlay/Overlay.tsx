@@ -43,52 +43,60 @@ const SOCIAL_LINKS: { title: string; url: string; icon: React.ReactElement }[] =
 
 export const Overlay = () => {
   return (
-    <div
-      id="overlay-container"
-      className="bg-red text-md max-w-[650px] p-6 text-black lg:p-8"
-      style={{ clipPath: 'inset(0 0 0 0)' }}
-    >
-      <div id="overlay-content" className="font-space-mono grid gap-12 opacity-0 lg:grid-cols-2 lg:gap-24">
-        <div>
-          <h1 className="mb-2 font-bold uppercase lg:mb-4">CLK Development</h1>
-          <p>A dedicated full stack senior developer, determined to make the web a more beautiful place.</p>
-        </div>
-        <div className="w-fit">
-          <h2 className="mb-2 font-bold lg:mb-4">Works</h2>
-          <ul>
-            {WEBSITE_LINKS.map((link) => (
-              <li key={link.title}>
+    <div className="relative">
+      <span
+        id="coords"
+        className="font-space-mono absolute right-0 bottom-full mb-2 text-xs text-black opacity-0"
+      ></span>
+      <div
+        id="overlay-container"
+        className="bg-red/80 text-md max-w-[650px] p-6 text-black lg:p-8"
+        style={{ clipPath: 'inset(0 100% 0 0)' }}
+      >
+        <div id="overlay-content" className="font-space-mono grid gap-12 opacity-0 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <h1 className="mb-2 font-bold uppercase lg:mb-4">CLK Development</h1>
+            <p className="text-justify">
+              A dedicated full stack senior developer, determined to make the web a more beautiful place.
+            </p>
+          </div>
+          <div className="w-fit">
+            <h2 className="mb-2 font-bold lg:mb-4">Works</h2>
+            <ul>
+              {WEBSITE_LINKS.map((link) => (
+                <li key={link.title}>
+                  <a
+                    href={link.url}
+                    className="flex items-center gap-2 whitespace-nowrap hover:opacity-50"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {link.title}
+                    <FaLongArrowAltRight />
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <ul className="mt-4 flex items-center gap-2">
+              {SOCIAL_LINKS.map((link) => (
+                <li key={link.title}>
+                  <a href={link.url} className="whitespace-nowrap hover:opacity-50" target="_blank" rel="noreferrer">
+                    {link.icon}
+                  </a>
+                </li>
+              ))}
+              <li>
                 <a
-                  href={link.url}
-                  className="flex items-center gap-2 whitespace-nowrap hover:opacity-50"
+                  href="mailto:samclark.dev@gmail.com"
+                  className="whitespace-nowrap hover:opacity-80"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {link.title}
-                  <FaLongArrowAltRight />
+                  <FaRegEnvelope />
                 </a>
               </li>
-            ))}
-          </ul>
-          <ul className="mt-4 flex items-center gap-2">
-            {SOCIAL_LINKS.map((link) => (
-              <li key={link.title}>
-                <a href={link.url} className="whitespace-nowrap hover:opacity-50" target="_blank" rel="noreferrer">
-                  {link.icon}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a
-                href="mailto:samclark.dev@gmail.com"
-                className="whitespace-nowrap hover:opacity-80"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaRegEnvelope />
-              </a>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
