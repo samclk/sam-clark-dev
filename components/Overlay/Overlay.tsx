@@ -27,19 +27,16 @@ const SOCIAL_LINKS: { title: string; url: string; icon: React.ReactElement }[] =
   {
     title: 'Instagram',
     url: 'https://www.instagram.com/sam.cl.rk/',
-    // @ts-expect-error - react-icons types incompatible with React 19 types
     icon: <FaInstagram />,
   },
   {
     title: 'LinkedIn',
     url: 'https://www.linkedin.com/in/sam-clark-5b712087/',
-    // @ts-expect-error - react-icons types incompatible with React 19 types
     icon: <FaLinkedin />,
   },
   {
     title: 'GitHub',
     url: 'https://github.com/samclk',
-    // @ts-expect-error - react-icons types incompatible with React 19 types
     icon: <FaGithub />,
   },
 ];
@@ -68,7 +65,6 @@ export const Overlay = () => {
                   rel="noreferrer"
                 >
                   {link.title}
-                  {/* @ts-expect-error - react-icons types incompatible with React 19 types */}
                   <FaLongArrowAltRight />
                 </a>
               </li>
@@ -89,7 +85,6 @@ export const Overlay = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {/* @ts-expect-error - react-icons types incompatible with React 19 types */}
                 <FaRegEnvelope />
               </a>
             </li>
