@@ -1,6 +1,6 @@
 export const PreLoader = () => {
   return (
-    <div id="pre-loader" className="bg-paper absolute inset-0 z-50 grid place-items-center">
+    <div id="pre-loader" className="bg-paper absolute top-0 left-0 z-50 grid h-svh w-full place-items-center">
       <div className="font-space-mono relative block text-sm uppercase">
         <span
           id="pre-loader-bar"

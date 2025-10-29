@@ -138,7 +138,7 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     { scope: pageWrapperRef },
   );
   return (
-    <div className="relative h-screen w-screen overflow-hidden" ref={pageWrapperRef}>
+    <div className="relative h-svh w-screen overflow-hidden" ref={pageWrapperRef}>
       {children}
       <div
         id="noise"

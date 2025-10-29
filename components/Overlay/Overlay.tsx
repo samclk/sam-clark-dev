@@ -46,7 +46,7 @@ export const Overlay = () => {
     <div className="relative">
       <span
         id="coords"
-        className="font-space-mono absolute right-0 bottom-full mb-2 text-xs text-black opacity-0"
+        className="font-space-mono absolute right-0 bottom-full mb-2 hidden text-xs text-black opacity-0 lg:block"
       ></span>
       <div
         id="overlay-container"
