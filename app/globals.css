@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+  --color-paper: #dfded1;
+  --color-green: #63d968;
+  --color-white: #ffffff;
+  --color-red: #ae4848;
+  --color-black: #111111;
+
+  --font-*: initial;
+  --font-space-mono: 'Space Mono', monospace;
+}
+
+@layer base {
+  html {
+    @apply h-full w-full;
+  }
+
+  body {
+    @apply bg-paper h-full w-full;
+  }
+}
