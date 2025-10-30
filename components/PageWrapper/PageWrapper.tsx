@@ -142,7 +142,7 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
       {children}
       <div
         id="noise"
-        className='animate-noise user-select-none pointer-events-none fixed inset-0 -top-1/2 -left-1/2 z-50 h-[200vh] w-[200vw] bg-[url("/noise.png")] bg-repeat opacity-0'
+        className='animate-noise user-select-none pointer-events-none fixed inset-0 top-1/2 left-1/2 z-50 h-[400vh] w-[400vw] -translate-x-1/2 -translate-y-1/2 bg-[url("/noise.png")] bg-repeat opacity-0'
       ></div>
     </div>
   );
