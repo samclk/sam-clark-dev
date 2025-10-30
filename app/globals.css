@@ -10,6 +10,7 @@
 
   --font-*: initial;
   --font-space-mono: 'Space Mono', monospace;
+  --font-montserrat: 'Montserrat', sans-serif;
 
   --animate-noise: noise 0.3s infinite;
   @keyframes noise {
