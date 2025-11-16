@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+  --color-paper: #dfded1;
+  --color-green: #63d968;
+  --color-white: #ffffff;
+  --color-red: #ae4848;
+  --color-black: #111111;
+
+  --font-*: initial;
+  --font-space-mono: 'Space Mono', monospace;
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  --animate-noise: noise 0.3s infinite;
+  @keyframes noise {
+    0% {
+      transform: translate(0, 0);
+    }
+    10% {
+      transform: translate(-5%, -5%);
+    }
+    20% {
+      transform: translate(-10%, 5%);
+    }
+    30% {
+      transform: translate(5%, -10%);
+    }
+    40% {
+      transform: translate(-5%, 15%);
+    }
+    50% {
+      transform: translate(-10%, 5%);
+    }
+    60% {
+      transform: translate(15%, 0);
+    }
+    70% {
+      transform: translate(0, 10%);
+    }
+    80% {
+      transform: translate(-15%, 0);
+    }
+    90% {
+      transform: translate(10%, 5%);
+    }
+    100% {
+      transform: translate(5%, 0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    @apply h-full w-full;
+  }
+
+  body {
+    @apply h-full w-full bg-black;
+  }
+}
