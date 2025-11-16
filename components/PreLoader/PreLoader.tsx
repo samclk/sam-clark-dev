@@ -8,7 +8,7 @@ export const PreLoader = () => {
           className="bg-red absolute block h-full w-full"
         ></span>
         <span id="pre-loader-text" className="relative z-10 block opacity-0">
-          CLK Development
+          CLK Studio
         </span>
       </div>
     </div>

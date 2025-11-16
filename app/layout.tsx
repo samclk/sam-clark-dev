@@ -6,10 +6,10 @@ import { Montserrat } from 'next/font/google';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CLK Development | Sam Clark, Senior Full Stack Developer',
+  title: 'CLK Studio | Sam Clark, Senior Full Stack Developer',
   description: 'A dedicated full stack senior developer, determined to make the web a more beautiful place.',
   openGraph: {
-    title: 'CLK Development | Sam Clark, Senior Full Stack Developer',
+    title: 'CLK Studio | Sam Clark, Senior Full Stack Developer',
     description: 'A dedicated full stack senior developer, determined to make the web a more beautiful place.',
     images: ['/me/me.jpg'],
   },
