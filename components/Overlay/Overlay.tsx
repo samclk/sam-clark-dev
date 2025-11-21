@@ -48,7 +48,7 @@ export const Overlay = () => {
         <h1 className="font-montserrat text-5xl leading-[0.9em] tracking-[-0.08em] text-white">
           sam clark
           <br />
-          senior full stack
+          creative full stack
           <br />
           developer
         </h1>
@@ -56,7 +56,7 @@ export const Overlay = () => {
       <div className="relative">
         <span
           id="coords"
-          className="font-space-mono absolute right-0 bottom-full mb-2 hidden text-xs text-black opacity-0 lg:block"
+          className="font-space-mono absolute bottom-full right-0 mb-2 hidden text-xs text-black opacity-0 lg:block"
         ></span>
         <div
           id="overlay-container"

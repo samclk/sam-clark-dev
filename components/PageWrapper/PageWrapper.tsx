@@ -47,33 +47,11 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
         clipPath: 'inset(0 0% 100% 0)',
         duration: 0.6,
         ease: 'power2.inOut',
-      });
-
-      tl.to('#blur-image', {
-        opacity: 1,
-        duration: 2,
-        ease: 'power2.inOut',
-      });
-
-      tl.from(
-        '#blur-image',
-        {
-          scale: 1.2,
-          duration: 2,
-          ease: 'power2.inOut',
+        onComplete: () => {
+          // Dispatch custom event when preloader finishes
+          window.dispatchEvent(new CustomEvent('preloader-complete'));
         },
-        '<',
-      );
-
-      tl.to(
-        '#clear-image',
-        {
-          opacity: 1,
-          duration: 0.8,
-          ease: 'circ.inOut',
-        },
-        '>-0.2',
-      );
+      });
 
       tl.to(
         '#top-bar',
@@ -142,7 +120,7 @@ export const PageWrapper = ({ children }: { children: React.ReactNode }) => {
       {children}
       <div
         id="noise"
-        className='animate-noise user-select-none pointer-events-none fixed inset-0 top-1/2 left-1/2 z-50 hidden -translate-x-1/2 -translate-y-1/2 bg-[url("/noise.png")] bg-repeat opacity-0 lg:block lg:h-[400vh] lg:w-[400vw]'
+        className='animate-noise user-select-none pointer-events-none fixed inset-0 left-1/2 top-1/2 z-50 hidden -translate-x-1/2 -translate-y-1/2 bg-[url("/noise.png")] bg-repeat opacity-0 lg:block lg:h-[400vh] lg:w-[400vw]'
       ></div>
     </div>
   );
