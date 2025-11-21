@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-=======
-'use client';
-
 import * as React from 'react';
->>>>>>> b21c64b (feat: switch to webgl)
 import { MaskEffect } from '../components/MaskEffect';
 import { Overlay } from '../components/Overlay';
 import { PageWrapper } from '../components/PageWrapper';

@@ -9,42 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@gsap/react": "^2.1.2",
-=======
-<<<<<<< Updated upstream
-=======
     "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.0",
->>>>>>> Stashed changes
->>>>>>> b21c64b (feat: switch to webgl)
     "@sendgrid/mail": "^7.7.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.13.0",
     "lodash": "^4.17.21",
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-icons": "^4.3.1",
-    "yup": "^0.32.11"
-=======
->>>>>>> b21c64b (feat: switch to webgl)
     "next": "^15.5.3",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-<<<<<<< HEAD
-    "react-icons": "^5.5.0"
-=======
     "react-icons": "^5.5.0",
-    "three": "^0.181.2"
->>>>>>> Stashed changes
->>>>>>> b21c64b (feat: switch to webgl)
+    "three": "^0.181.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
