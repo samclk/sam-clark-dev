@@ -107,25 +107,28 @@
   }
 }
 
-@layer base {
-  /* script.js adds .is-in on first entry; the .js gate keeps content visible if it never runs */
-  .js [data-reveal] {
-    opacity: 0;
-    transform: translateY(20px);
-    transition:
-      opacity 1100ms var(--ease-brand),
-      transform 1100ms var(--ease-brand);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
+/* Reveal only ever hides content where scripting can bring it back. Browsers without the feature
+   query never match, so the content stays visible and only the animation is lost. */
+@media (scripting: enabled) {
+  @layer base {
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 1100ms var(--ease-brand),
+        transform 1100ms var(--ease-brand);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
 
-  .js [data-reveal][data-in='true'] {
-    opacity: 1;
-    transform: none;
+    [data-reveal][data-in='true'] {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] {
+  [data-reveal] {
     opacity: 1;
     transform: none;
     transition: none;

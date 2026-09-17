@@ -44,11 +44,7 @@ const jetbrains = JetBrains_Mono({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${schibsted.variable} ${instrument.variable} ${jetbrains.variable}`}>
-      <body>
-        {/* Runs before any revealable element is parsed, so the gate is in place with no flash */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
