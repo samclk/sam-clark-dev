@@ -45,20 +45,22 @@
 
 @supports (animation-timeline: view()) {
   [data-proto~='portrait-parallax'] #about img {
-    /* the drift would expose the frame edges at the natural size */
-    scale: 1.14;
+    /* the drift would expose the frame edges at the natural size; 1.28 leaves ~16px spare at 8% */
+    scale: 1.28;
     animation: proto-parallax linear both;
     animation-timeline: view();
-    animation-range: cover;
+    /* About never exits the viewport before the page runs out, so the full cover range is
+       unreachable and the sweep would only ever play its middle third */
+    animation-range: cover 8% cover 78%;
   }
 }
 
 @keyframes proto-parallax {
   from {
-    translate: 0 -4.5%;
+    translate: 0 -8%;
   }
   to {
-    translate: 0 4.5%;
+    translate: 0 8%;
   }
 }
 
