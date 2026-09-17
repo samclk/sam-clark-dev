@@ -1,9 +1,9 @@
 import { tv } from 'tailwind-variants';
 import type { HeadingLevel } from '@/types/headingLevel';
 
+/** Order here is the order on the page. The index is derived, so reordering is a move and nothing else. */
 const WORKS = [
   {
-    index: '01',
     name: 'Backstage with Bon Jovi',
     url: 'https://backstage.bonjovi.com/',
     tag: 'Awwwards SOTD',
@@ -11,39 +11,34 @@ const WORKS = [
     built: 'Three.js · WebGL',
   },
   {
-    index: '02',
+    name: 'Intercom / Fin AI',
+    url: 'https://fin.ai/',
+    role: 'Senior Developer',
+    built: 'Component library · Home page',
+  },
+  {
     name: 'Natoora',
     url: 'https://natoora.com/en-GB/',
     role: 'Lead Developer',
     built: 'Sanity · Commerce Layer',
   },
   {
-    index: '03',
     name: 'Neverbland Studio',
     url: 'https://neverbland.com/',
     role: 'Sole Developer',
     built: 'Design system · Page builder',
   },
   {
-    index: '04',
     name: 'RSPCA Assured',
     url: 'https://www.rspcaassured.org.uk/',
     role: 'Sole Developer',
     built: 'Component library · Sanity CMS',
   },
   {
-    index: '05',
     name: 'Fussy',
     url: 'https://fussy.com/',
     role: 'Lead Developer',
     built: 'Component design · Shopify',
-  },
-  {
-    index: '06',
-    name: 'Intercom / Fin AI',
-    url: 'https://fin.ai/',
-    role: 'Senior Developer',
-    built: 'Component library · Home page',
   },
 ];
 
@@ -81,11 +76,11 @@ export const WorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) 
       </div>
 
       <ul>
-        {WORKS.map((work) => (
-          <li key={work.index}>
+        {WORKS.map((work, i) => (
+          <li key={work.name}>
             <a className={row()} href={work.url} target="_blank" rel="noreferrer">
               <span className={rule()} aria-hidden="true" />
-              <span className={index()}>{work.index}</span>
+              <span className={index()}>{String(i + 1).padStart(2, '0')}</span>
               <span className={name()}>
                 {work.name}
                 {/* a label rather than aria-label, so the role and stack are still announced */}
