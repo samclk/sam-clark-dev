@@ -6,6 +6,7 @@ import { Montserrat } from 'next/font/google';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.clkstudio.co.uk'),
   title: 'CLK Studio | Sam Clark, Senior Full Stack Developer',
   description: 'A dedicated full stack senior developer, determined to make the web a more beautiful place.',
   openGraph: {
