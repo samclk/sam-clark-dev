@@ -1,1 +1,1 @@
-export * from './MaskEffect';
+export { MaskEffect } from './MaskEffect';
