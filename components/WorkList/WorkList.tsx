@@ -31,6 +31,20 @@ const WORKS = [
     role: 'Sole Developer',
     built: 'Component library · Sanity CMS',
   },
+  {
+    index: '05',
+    name: 'Fussy',
+    url: 'https://fussy.com/',
+    role: 'Lead Developer',
+    built: 'Component design · Shopify',
+  },
+  {
+    index: '06',
+    name: 'Intercom / Fin AI',
+    url: 'https://fin.ai/',
+    role: 'Senior Developer',
+    built: 'Component library · Home page',
+  },
 ];
 
 const workList = tv({
@@ -63,7 +77,7 @@ export const WorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) 
     <section className={root()} id="work">
       <div className={head()}>
         <Heading className={title()}>Works</Heading>
-        <p className={note()}>Four selected</p>
+        <p className={note()}>Six selected</p>
       </div>
 
       <ul>
