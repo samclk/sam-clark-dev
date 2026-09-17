@@ -51,7 +51,8 @@ const workList = tv({
     head: 'flex items-baseline gap-4 pb-[30px]',
     title: 'mono font-normal text-faint',
     note: 'ml-auto mono text-faint',
-    row: 'group relative flex flex-wrap items-center gap-4 border-t border-hairline px-1.5 py-[clamp(22px,2.6vw,36px)] last:border-b nav:flex-nowrap nav:gap-[clamp(16px,2vw,32px)]',
+    item: 'last:border-b last:border-hairline',
+    row: 'group relative flex flex-wrap items-center gap-4 border-t border-hairline px-1.5 py-[clamp(22px,2.6vw,36px)] nav:flex-nowrap nav:gap-[clamp(16px,2vw,32px)]',
     rule: 'absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-accent transition-transform duration-[760ms] ease-brand group-hover:scale-x-100',
     index:
       'w-[34px] mono text-faint transition duration-[420ms] ease-brand group-hover:-translate-y-[3px] group-hover:text-accent',
@@ -66,7 +67,7 @@ const workList = tv({
   },
 });
 
-const { root, head, title, note, row, rule, index, name, right, tag, meta, separator, arrow } = workList();
+const { root, head, title, note, item, row, rule, index, name, right, tag, meta, separator, arrow } = workList();
 
 export const ProtoWorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) => {
   const Heading = `h${headingLevel}` as const;
@@ -80,7 +81,7 @@ export const ProtoWorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLeve
 
       <ul>
         {WORKS.map((work, i) => (
-          <li key={work.name}>
+          <li className={item()} key={work.name}>
             <Reveal delay={i * 70}>
               <a className={row()} href={work.url} target="_blank" rel="noreferrer">
                 <span className={rule()} aria-hidden="true" />

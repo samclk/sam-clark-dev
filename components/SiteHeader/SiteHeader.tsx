@@ -1,7 +1,6 @@
-'use client';
 import { tv } from 'tailwind-variants';
 import { Clock } from '@/components/Clock';
-import { useHideOnScroll } from '@/utils/useHideOnScroll';
+import { HideOnScroll } from '@/components/HideOnScroll';
 
 const SECTIONS = [
   { index: '01', label: 'Highlights', href: '#highlights' },
@@ -38,13 +37,15 @@ const siteHeader = tv({
   },
 });
 
-const { root, wordmark, nav, link, index, pill, pillIndex, clock } = siteHeader();
+const { wordmark, nav, link, index, pill, pillIndex, clock } = siteHeader();
+
+// resolved here so tailwind-variants stays out of the client bundle; only the two strings cross over
+const SHOWN = siteHeader({ hidden: false }).root();
+const HIDDEN = siteHeader({ hidden: true }).root();
 
 export const SiteHeader = () => {
-  const hidden = useHideOnScroll();
-
   return (
-    <header className={root({ hidden })}>
+    <HideOnScroll className={SHOWN} hiddenClassName={HIDDEN}>
       <a className={wordmark()} href="#top">
         CLK Studio
       </a>
@@ -66,6 +67,6 @@ export const SiteHeader = () => {
       <p className={clock()}>
         Local time <Clock />
       </p>
-    </header>
+    </HideOnScroll>
   );
 };
