@@ -2,15 +2,15 @@ import { tv } from 'tailwind-variants';
 import type { HeadingLevel } from '@/types/headingLevel';
 
 /**
- * Every tile is still a placeholder. Swap the div for an <img className="tile-media"> or a muted,
- * looping <video className="tile-media"> and the hover scale and caption come along unchanged.
+ * A showcase, not a gallery: the tiles do not respond to the pointer and lead nowhere. Every tile is
+ * still a placeholder. Swap the div for an <img> or a muted, looping <video> and keep the media slot.
  */
 const TILES = [
-  { span: 'wide' as const, caption: '[WHAT THIS IS — PROJECT, YEAR]' },
-  { span: 'narrow' as const, caption: '[WHAT THIS IS — PROJECT, YEAR]' },
-  { span: 'third' as const, caption: '[WHAT THIS IS — PROJECT, YEAR]' },
-  { span: 'third' as const, caption: '[WHAT THIS IS — PROJECT, YEAR]' },
-  { span: 'third' as const, caption: '[WHAT THIS IS — PROJECT, YEAR]' },
+  { span: 'wide' as const },
+  { span: 'narrow' as const },
+  { span: 'third' as const },
+  { span: 'third' as const },
+  { span: 'third' as const },
 ];
 
 const mosaic = tv({
@@ -20,13 +20,9 @@ const mosaic = tv({
     title: 'mono font-normal text-faint',
     note: 'ml-auto mono text-faint',
     grid: 'grid grid-cols-12 gap-3 nav:gap-4',
-    tile: 'group relative overflow-hidden border border-ink/10 bg-tile',
-    media: 'block size-full object-cover transition-transform duration-[1400ms] ease-brand group-hover:scale-[1.045]',
+    tile: 'overflow-hidden border border-ink/10 bg-tile',
+    media: 'block size-full object-cover',
     placeholder: 'flex size-full items-center justify-center mono text-faint',
-    scrim:
-      'pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-ink/60 to-transparent opacity-0 transition-opacity duration-[520ms] group-hover:opacity-100',
-    caption:
-      'absolute inset-x-[18px] bottom-4 translate-y-2.5 mono text-paper opacity-0 transition duration-[480ms] ease-brand group-hover:translate-y-0 group-hover:opacity-100',
   },
   variants: {
     span: {
@@ -39,7 +35,7 @@ const mosaic = tv({
   },
 });
 
-const { root, head, title, note, grid, tile, media, placeholder, scrim, caption } = mosaic();
+const { root, head, title, note, grid, tile, media, placeholder } = mosaic();
 
 export const Mosaic = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) => {
   const Heading = `h${headingLevel}` as const;
@@ -54,13 +50,11 @@ export const Mosaic = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) =>
       <div className={grid()}>
         {TILES.map((entry, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <figure className={tile({ span: entry.span })} key={i}>
+          <div className={tile({ span: entry.span })} key={i}>
             <div className={`${media()} ${placeholder()}`}>
               <span>[IMAGE OR VIDEO]</span>
             </div>
-            <div className={scrim()} aria-hidden="true" />
-            <figcaption className={caption()}>{entry.caption}</figcaption>
-          </figure>
+          </div>
         ))}
       </div>
     </section>
