@@ -1,35 +1,28 @@
 'use client';
 import * as React from 'react';
+import { tv } from 'tailwind-variants';
+
+const clock = tv({ slots: { root: 'tabular-nums' } });
+
+const { root } = clock();
 
 export const Clock = () => {
-  const [seconds, setSeconds] = React.useState<number | null>(null);
-  const [minutes, setMinutes] = React.useState<number | null>(null);
-  const [hours, setHours] = React.useState<number | null>(null);
-
-  const timeIsReady = hours !== null && minutes !== null && seconds !== null;
+  const [time, setTime] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    function setTime() {
+    const pad = (value: number) => value.toString().padStart(2, '0');
+
+    const setNow = () => {
       const now = new Date();
+      setTime(`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+    };
 
-      setSeconds(now.getSeconds());
-      setMinutes(now.getMinutes());
-      setHours(now.getHours());
-    }
-
-    const intervalId = setInterval(setTime, 1000);
+    setNow();
+    const intervalId = setInterval(setNow, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  return (
-    <section>
-      {timeIsReady && (
-        <div>
-          {hours?.toString().padStart(2, '0')}:{minutes?.toString().padStart(2, '0')}:
-          {seconds?.toString().padStart(2, '0')}
-        </div>
-      )}
-    </section>
-  );
+  // rendered empty on the server so the first paint cannot disagree with the client clock
+  return <div className={root()}>{time}</div>;
 };

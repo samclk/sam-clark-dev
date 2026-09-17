@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { useMemo } from 'react';
 import * as THREE from 'three';
 
 interface MaskShaderProps {
@@ -11,9 +10,8 @@ interface MaskShaderProps {
   materialRef: React.RefObject<THREE.ShaderMaterial | null>;
 }
 
-export const MaskShader: React.FC<MaskShaderProps> = ({ blurTexture, clearTexture, viewportAspect, materialRef }) => {
-  // Create shader material
-  const material = useMemo(() => {
+export const MaskShader = ({ blurTexture, clearTexture, viewportAspect, materialRef }: MaskShaderProps) => {
+  const material = React.useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         uBlurTexture: { value: blurTexture },
@@ -23,7 +21,7 @@ export const MaskShader: React.FC<MaskShaderProps> = ({ blurTexture, clearTextur
       },
       vertexShader: `
         varying vec2 vUv;
-        
+
         void main() {
           vUv = uv;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -34,34 +32,34 @@ export const MaskShader: React.FC<MaskShaderProps> = ({ blurTexture, clearTextur
         uniform sampler2D uClearTexture;
         uniform vec2 uMousePos;
         uniform float uViewportAspect;
-        
+
         varying vec2 vUv;
-        
+
         void main() {
-          // Sample textures
           vec4 blurColor = texture2D(uBlurTexture, vUv);
           vec4 clearColor = texture2D(uClearTexture, vUv);
-          
-          // Calculate distance from mouse position for mask (convert to screen coordinates)
+
           vec2 screenUv = vec2(vUv.x, 1.0 - vUv.y);
           vec2 aspectUv = vec2(screenUv.x * uViewportAspect, screenUv.y);
           vec2 aspectMouse = vec2(uMousePos.x * uViewportAspect, uMousePos.y);
           float dist = distance(aspectUv, aspectMouse);
-          
-          // Radial gradient mask (0 = clear, 1 = blurred)
+
+          // 0 at the cursor, 1 away from it, so the mix reveals the sharp texture under the pointer
           float mask = smoothstep(0.1, 0.25, dist);
-          
+
           gl_FragColor = mix(clearColor, blurColor, mask);
         }
       `,
       transparent: true,
     });
+    // viewportAspect is a live uniform updated every frame, so rebuilding the material on it would
+    // throw away the compiled shader sixty times a second
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blurTexture, clearTexture]);
 
-  // Store material ref for parent to update uniforms
   React.useEffect(() => {
     materialRef.current = material;
+    return () => material.dispose();
   }, [material, materialRef]);
 
   // eslint-disable-next-line react/no-unknown-property
