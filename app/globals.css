@@ -11,6 +11,8 @@
   --color-accent: #b4502f;
   --color-status: #3f7a55;
   --color-tile: #eae9e3;
+  /* only for the blended header: difference needs a white source to land on ink over paper */
+  --color-white: #ffffff;
 
   --font-*: initial;
 
@@ -52,7 +54,10 @@
 }
 
 @layer base {
+  /* html carries the ground too, so body's background is not propagated to the canvas. The canvas is
+     not part of the blending backdrop, and without this the sticky header has nothing to blend with. */
   html {
+    @apply bg-paper;
     scroll-behavior: smooth;
   }
 

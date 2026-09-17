@@ -8,16 +8,22 @@ const SECTIONS = [
   { index: '04', label: 'Contact', href: '#contact' },
 ];
 
+/**
+ * Sticky with no ground of its own. Under mix-blend-difference the source has to be white to land
+ * near ink on paper, and the same white inverts to near-paper over a dark image, so the header stays
+ * legible over anything it passes. Hierarchy comes from alpha rather than the grey tokens, which
+ * would inverse: the darker the source, the lighter the result.
+ */
 const siteHeader = tv({
   slots: {
-    root: 'mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10',
+    root: 'sticky top-0 z-50 mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-white mix-blend-difference',
     wordmark: 'ln mono font-medium tracking-[0.14em]',
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
-    index: 'mr-[7px] text-faint transition-colors duration-[420ms] group-hover:text-accent',
-    pill: 'ml-auto rounded-full border border-ink/20 px-4 py-3.5 mono nav:hidden',
-    pillIndex: 'mr-[7px] text-faint',
-    clock: 'hidden min-w-[168px] text-right mono text-quiet clock:block',
+    index: 'mr-[7px] text-white/55 transition-colors duration-[420ms] group-hover:text-white',
+    pill: 'ml-auto rounded-full border border-white/35 px-4 py-3.5 mono nav:hidden',
+    pillIndex: 'mr-[7px] text-white/55',
+    clock: 'hidden min-w-[168px] text-right mono text-white/70 clock:block',
   },
 });
 
