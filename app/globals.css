@@ -2,60 +2,139 @@
 
 @theme {
   --color-*: initial;
-  --color-paper: #dfded1;
-  --color-green: #63d968;
-  --color-white: #ffffff;
-  --color-red: #ae4848;
-  --color-black: #111111;
+  --color-paper: #f4f3ef;
+  --color-paper-raised: #faf9f6;
+  --color-ink: #14140f;
+  --color-quiet: #5e5d56;
+  --color-faint: #8a897e;
+  --color-hairline: rgb(20 20 15 / 0.13);
+  --color-accent: #b4502f;
+  --color-status: #3f7a55;
+  --color-tile: #eae9e3;
 
   --font-*: initial;
-  --font-space-mono: 'Space Mono', monospace;
-  --font-montserrat: 'Montserrat', sans-serif;
 
-  --animate-noise: noise 0.3s infinite;
-  @keyframes noise {
+  --text-hero: clamp(38px, 6.1vw, 82px);
+  --text-work: clamp(24px, 3.2vw, 44px);
+  --text-mail: clamp(26px, 4.6vw, 64px);
+  --text-lede: clamp(19px, 2vw, 27px);
+  --text-body: clamp(16px, 1.3vw, 19px);
+  --text-label: 11px;
+
+  --spacing-gutter: clamp(24px, 5.2vw, 120px);
+  --spacing-section: clamp(88px, 11vw, 168px);
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* the two points the design actually breaks at, rather than the default scale */
+  --breakpoint-nav: 861px;
+  --breakpoint-clock: 1081px;
+
+  --animate-status-pulse: status-pulse 2800ms ease-out infinite;
+  @keyframes status-pulse {
     0% {
-      transform: translate(0, 0);
-    }
-    10% {
-      transform: translate(-5%, -5%);
-    }
-    20% {
-      transform: translate(-10%, 5%);
-    }
-    30% {
-      transform: translate(5%, -10%);
-    }
-    40% {
-      transform: translate(-5%, 15%);
-    }
-    50% {
-      transform: translate(-10%, 5%);
-    }
-    60% {
-      transform: translate(15%, 0);
+      box-shadow: 0 0 0 0 rgb(63 122 85 / 0.5);
     }
     70% {
-      transform: translate(0, 10%);
-    }
-    80% {
-      transform: translate(-15%, 0);
-    }
-    90% {
-      transform: translate(10%, 5%);
+      box-shadow: 0 0 0 10px rgb(63 122 85 / 0);
     }
     100% {
-      transform: translate(5%, 0);
+      box-shadow: 0 0 0 0 rgb(63 122 85 / 0);
     }
   }
 }
 
+/* next/font emits these on <html>, so they must be substituted rather than redeclared */
+@theme inline {
+  --font-sans: var(--font-schibsted);
+  --font-serif: var(--font-instrument);
+  --font-mono: var(--font-jetbrains);
+}
+
 @layer base {
   html {
-    @apply h-full w-full;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply h-full w-full bg-black;
+    @apply bg-paper font-sans text-body text-ink antialiased;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-accent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Mono labels, indices, clock and tags. One definition rather than five utilities per element. */
+@utility mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Underline that wipes out to the left and back in from the right */
+@utility ln {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -4px 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 520ms var(--ease-brand);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@layer base {
+  /* script.js adds .is-in on first entry; the .js gate keeps content visible if it never runs */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 1100ms var(--ease-brand),
+      transform 1100ms var(--ease-brand);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal][data-in='true'] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation: none !important;
   }
 }
