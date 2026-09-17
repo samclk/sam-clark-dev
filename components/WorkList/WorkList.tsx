@@ -11,7 +11,12 @@ const WORKS = [
   },
   { index: '02', name: 'Natoora', role: 'Lead Developer', built: 'Sanity · Commerce Layer' },
   { index: '03', name: 'Neverbland Studio', role: 'Sole Developer', built: 'Design system · Page builder' },
-  { index: '04', name: 'RSPCA Assured', role: '[ROLE]', built: '[WHAT YOU BUILT]' },
+  {
+    index: '04',
+    name: 'RSPCA Assured',
+    role: 'Sole Developer',
+    built: 'Design · Component library · Sanity CMS',
+  },
 ];
 
 const workList = tv({
