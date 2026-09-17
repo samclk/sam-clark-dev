@@ -1,0 +1,3 @@
+# next 15.5.25 pins postcss 8.4.31, which carries four sourceMappingURL advisories
+overrides:
+  postcss: ^8.5.28
