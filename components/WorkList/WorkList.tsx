@@ -5,17 +5,31 @@ const WORKS = [
   {
     index: '01',
     name: 'Backstage with Bon Jovi',
+    url: 'https://backstage.bonjovi.com/',
     tag: 'Awwwards SOTD',
     role: 'Lead Developer',
     built: 'Three.js · WebGL',
   },
-  { index: '02', name: 'Natoora', role: 'Lead Developer', built: 'Sanity · Commerce Layer' },
-  { index: '03', name: 'Neverbland Studio', role: 'Sole Developer', built: 'Design system · Page builder' },
+  {
+    index: '02',
+    name: 'Natoora',
+    url: 'https://natoora.com/en-GB/',
+    role: 'Lead Developer',
+    built: 'Sanity · Commerce Layer',
+  },
+  {
+    index: '03',
+    name: 'Neverbland Studio',
+    url: 'https://neverbland.com/',
+    role: 'Sole Developer',
+    built: 'Design system · Page builder',
+  },
   {
     index: '04',
     name: 'RSPCA Assured',
+    url: 'https://www.rspcaassured.org.uk/',
     role: 'Sole Developer',
-    built: 'Design · Component library · Sanity CMS',
+    built: 'Component library · Sanity CMS',
   },
 ];
 
@@ -34,7 +48,7 @@ const workList = tv({
       'flex w-full min-w-0 flex-wrap items-center gap-x-[18px] gap-y-2 pl-[50px] nav:ml-auto nav:w-auto nav:flex-nowrap nav:pl-0',
     tag: 'rounded-full border border-ink/20 px-3 py-[7px] mono whitespace-nowrap text-quiet',
     meta: 'min-w-0 mono text-quiet transition-opacity duration-[420ms] group-hover:opacity-45',
-    separator: 'mx-2 text-faint',
+    separator: 'mx-1 text-faint',
     arrow:
       'hidden w-[22px] -translate-x-3.5 opacity-0 transition duration-[640ms] ease-brand group-hover:translate-x-0 group-hover:opacity-100 nav:flex',
   },
@@ -55,16 +69,19 @@ export const WorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) 
       <ul>
         {WORKS.map((work) => (
           <li key={work.index}>
-            {/* href stays # until the case study pages exist */}
-            <a className={row()} href="#">
+            <a className={row()} href={work.url} target="_blank" rel="noreferrer">
               <span className={rule()} aria-hidden="true" />
               <span className={index()}>{work.index}</span>
-              <span className={name()}>{work.name}</span>
+              <span className={name()}>
+                {work.name}
+                {/* a label rather than aria-label, so the role and stack are still announced */}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </span>
               <span className={right()}>
                 {work.tag ? <span className={tag()}>{work.tag}</span> : null}
                 <span className={meta()}>
                   {work.role}
-                  <span className={separator()}>/</span>
+                  <span className={separator()}> / </span>
                   {work.built}
                 </span>
               </span>
