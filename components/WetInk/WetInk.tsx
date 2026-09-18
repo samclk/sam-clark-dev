@@ -20,10 +20,16 @@ import { createSketch, readColor, type Sketch } from './gl';
 import { BLEED, drawText } from './textToCanvas';
 import { WET_INK } from './shader';
 
-/** Seconds the drying ramp takes, how long the ripple lags the cursor, and the hover fade. */
+/** Seconds the drying ramp takes, and how long the ripple lags the cursor. */
 const DRY_SECONDS = 1.7;
 const DRAG_SECONDS = 1.9;
-const HOVER_SECONDS = 0.55;
+/** Damped, not ramped, so neither kicks at the start nor snaps at the end. */
+const HOVER_TAU = 0.18;
+const AIM_TAU = 0.05;
+/** Without this the ripple's shape tracks raw cursor velocity while its body still crawls. */
+const TRAIL_TAU = 0.12;
+/** Below this a damped value is done, so the loop sleeps instead of chasing the last fraction. */
+const SETTLED = 0.002;
 
 type WetInkProps = {
   children: React.ReactNode;
@@ -41,10 +47,14 @@ type Bound = {
   hover: number;
   arrived: boolean;
   hovered: boolean;
-  /** Where the cursor is. */
+  /** Where the cursor actually is, straight off the last event. */
+  raw: [number, number];
+  /** Where the cursor is once the event jitter is damped out. The trail measures from here. */
   aim: [number, number];
-  /** Where the ripple thinks it is, which lags behind. */
+  /** Where the ripple thinks it is, which lags much further behind. */
   pointer: [number, number];
+  /** How far behind it is, damped, which is what stretches the ripple along the axis of travel. */
+  trail: [number, number];
   /** False until the first move, so the lag does not swim in from the corner on the way in. */
   aimed: boolean;
 };
@@ -90,25 +100,33 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
         const dry = bound.arrived ? 1 : 0;
         const hovered = bound.hovered ? 1 : 0;
         bound.progress = ramp(bound.progress, dry, dt, DRY_SECONDS);
-        bound.hover = ramp(bound.hover, hovered, dt, HOVER_SECONDS);
+        bound.hover = damp(bound.hover, hovered, dt, HOVER_TAU);
+        if (Math.abs(bound.hover - hovered) < SETTLED) bound.hover = hovered;
+        bound.aim = [damp(bound.aim[0], bound.raw[0], dt, AIM_TAU), damp(bound.aim[1], bound.raw[1], dt, AIM_TAU)];
         bound.pointer = [
           damp(bound.pointer[0], bound.aim[0], dt, DRAG_SECONDS),
           damp(bound.pointer[1], bound.aim[1], dt, DRAG_SECONDS),
         ];
 
-        const trail: [number, number] = [bound.aim[0] - bound.pointer[0], bound.aim[1] - bound.pointer[1]];
+        // held until the ripple is finished rather than merely invisible, so a cursor that leaves
+        // and returns inside the fade picks it up where it was instead of teleporting it
+        if (!bound.hovered && bound.hover === 0) bound.aimed = false;
+
+        const chase: [number, number] = [bound.aim[0] - bound.pointer[0], bound.aim[1] - bound.pointer[1]];
+        bound.trail = [damp(bound.trail[0], chase[0], dt, TRAIL_TAU), damp(bound.trail[1], chase[1], dt, TRAIL_TAU)];
+
         // a held pointer keeps the ripple moving, so a finished ramp must not stop the loop under it
         if (bound.hovered || bound.progress !== dry || bound.hover !== hovered) busy = true;
         // Only while the ripple is still visible: with the lag at DRAG_SECONDS the trail takes
-        // about 13s to fall under half a pixel, long after the hover ramp has faded it to nothing.
-        if (bound.hover > 0.001 && Math.hypot(trail[0], trail[1]) > 0.5) busy = true;
+        // about 13s to fall under half a pixel, long after the hover fade has taken it to nothing.
+        if (bound.hover > 0 && Math.hypot(bound.trail[0], bound.trail[1]) > 0.5) busy = true;
 
         bound.sketch.draw({
           uRes: bound.size,
           uTime: now / 1000,
           uPointer: bound.pointer,
-          uTrail: trail,
-          uHover: easeOutCubic(bound.hover),
+          uTrail: bound.trail,
+          uHover: bound.hover,
           uProgress: easeOutCubic(bound.progress),
           uInk: ink,
           uAccent: accent,
@@ -136,8 +154,10 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
         hover: 0,
         arrived: !settle,
         hovered: false,
+        raw: [0, 0],
         aim: [0, 0],
         pointer: [0, 0],
+        trail: [0, 0],
         aimed: false,
       };
 
@@ -177,18 +197,19 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
       };
       const onLeave = () => {
         bound.hovered = false;
-        bound.aimed = false;
         wake();
       };
       const onMove = (event: PointerEvent) => {
         const rect = sketch.canvas.getBoundingClientRect();
-        bound.aim = [
+        bound.raw = [
           event.clientX - rect.left,
           // y-up, to match the flipped texture the shader samples
           bound.size[1] - (event.clientY - rect.top),
         ];
         if (!bound.aimed) {
-          bound.pointer = [...bound.aim];
+          bound.aim = [...bound.raw];
+          bound.pointer = [...bound.raw];
+          bound.trail = [0, 0];
           bound.aimed = true;
         }
         wake();

@@ -51,10 +51,13 @@ void main() {
 
   vec2 rel = vUv * uRes - uPointer;
   float lag = length(uTrail);
-  vec2 axis = lag > 0.5 ? uTrail / lag : vec2(1.0, 0.0);
-  float stretch = 1.0 + min(lag * 0.022, 2.1);
+  // numerical guard only: stretch is 1 at a standstill, so the axis stops mattering there
+  vec2 axis = lag > 0.0001 ? uTrail / lag : vec2(1.0, 0.0);
+  // same ceiling and initial rate as the min() it replaces, without a kink for a sweep to cross
+  float stretch = 1.0 + 2.1 * (1.0 - exp(-lag * 0.0105));
   float dist = length(vec2(dot(rel, axis) / stretch, dot(rel, vec2(-axis.y, axis.x))));
-  vec2 dir = normalize(rel + vec2(0.001));
+  // falls away to nothing at the centre instead of picking a direction out of the rounding error
+  vec2 dir = rel / max(length(rel), 8.0);
   float wave = sin(dist * 0.22 - uTime * 1.1) * exp(-dist * 0.028) * uHover;
 
   vec2 flow = vec2(
