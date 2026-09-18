@@ -2,60 +2,223 @@
 
 @theme {
   --color-*: initial;
-  --color-paper: #dfded1;
-  --color-green: #63d968;
+  --color-paper: #f4f3ef;
+  --color-paper-raised: #faf9f6;
+  --color-ink: #14140f;
+  --color-quiet: #5e5d56;
+  --color-faint: #8a897e;
+  --color-hairline: rgb(20 20 15 / 0.13);
+  --color-accent: #b4502f;
+  --color-status: #3f7a55;
+  --color-tile: #eae9e3;
+  /* only for the blended header: difference needs a white source to land on ink over paper */
   --color-white: #ffffff;
-  --color-red: #ae4848;
-  --color-black: #111111;
 
   --font-*: initial;
-  --font-space-mono: 'Space Mono', monospace;
-  --font-montserrat: 'Montserrat', sans-serif;
 
-  --animate-noise: noise 0.3s infinite;
-  @keyframes noise {
+  /* the floor binds below 524px, where 38px broke the headline onto five ragged lines */
+  --text-hero: clamp(32px, 6.1vw, 82px);
+  --text-work: clamp(24px, 3.2vw, 44px);
+  --text-mail: clamp(26px, 4.6vw, 64px);
+  --text-lede: clamp(19px, 2vw, 27px);
+  --text-body: clamp(16px, 1.3vw, 19px);
+  --text-label: 11px;
+
+  --spacing-gutter: clamp(24px, 5.2vw, 120px);
+  --spacing-section: clamp(88px, 11vw, 168px);
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* the two points the design actually breaks at, rather than the default scale */
+  --breakpoint-nav: 861px;
+  --breakpoint-clock: 1081px;
+
+  --animate-status-pulse: status-pulse 2800ms ease-out infinite;
+  @keyframes status-pulse {
     0% {
-      transform: translate(0, 0);
-    }
-    10% {
-      transform: translate(-5%, -5%);
-    }
-    20% {
-      transform: translate(-10%, 5%);
-    }
-    30% {
-      transform: translate(5%, -10%);
-    }
-    40% {
-      transform: translate(-5%, 15%);
-    }
-    50% {
-      transform: translate(-10%, 5%);
-    }
-    60% {
-      transform: translate(15%, 0);
+      box-shadow: 0 0 0 0 rgb(63 122 85 / 0.5);
     }
     70% {
-      transform: translate(0, 10%);
-    }
-    80% {
-      transform: translate(-15%, 0);
-    }
-    90% {
-      transform: translate(10%, 5%);
+      box-shadow: 0 0 0 10px rgb(63 122 85 / 0);
     }
     100% {
-      transform: translate(5%, 0);
+      box-shadow: 0 0 0 0 rgb(63 122 85 / 0);
     }
   }
 }
 
+/* next/font emits these on <html>, so they must be substituted rather than redeclared */
+@theme inline {
+  /* Shadow end of the About portrait's duotone: ink warmed towards the accent. */
+  --color-duotone: color-mix(in oklab, var(--color-ink) 84%, var(--color-accent));
+
+  --font-sans: var(--font-schibsted);
+  --font-serif: var(--font-instrument);
+  --font-mono: var(--font-jetbrains);
+}
+
 @layer base {
+  /* html carries the ground too, so body's background is not propagated to the canvas. The canvas is
+     not part of the blending backdrop, and without this the sticky header has nothing to blend with. */
   html {
-    @apply h-full w-full;
+    @apply bg-paper;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply h-full w-full bg-black;
+    @apply bg-paper font-sans text-body text-ink antialiased;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-accent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Mono labels, indices, clock and tags. One definition rather than five utilities per element. */
+@utility mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Middot between inline items, so a list needs no separator element per gap. It hangs off the
+   preceding item rather than the next one, so a wrap never leaves a dot starting a line. */
+@utility dot-between {
+  & > *:not(:last-child)::after {
+    content: '\00B7';
+    margin-left: 4px;
+    color: var(--color-faint);
+  }
+}
+
+/* Underline that wipes out to the left and back in from the right */
+@utility ln {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -4px 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 520ms var(--ease-brand);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Hovering one item backs the others off, so the one under the pointer is the only one at full
+   strength. The list opts in; its children need no class of their own. */
+@utility dim-siblings {
+  & > * {
+    transition: opacity 420ms var(--ease-brand);
+  }
+
+  /* Pointer only. A tap leaves :hover stuck on a touch device, so the last row tapped would hold
+     every other row dimmed until something else was tapped. */
+  @media (hover: hover) {
+    &:hover > :not(:hover) {
+      opacity: 0.4;
+    }
+  }
+
+  /* :focus-visible, not :focus-within — a clicked link keeps focus, so a plain :focus-within would
+     leave the list dimmed for good once the reader came back from a target="_blank" tab. */
+  &:not(:hover):has(:focus-visible) > :not(:has(:focus-visible)) {
+    opacity: 0.4;
+  }
+}
+
+/* Fills across the top with scroll position. Browsers without scroll timelines never match the
+   feature query, so the rule stays at zero width and the page simply does without it. */
+@utility scroll-progress {
+  transform-origin: left;
+  scale: 0 1;
+
+  @supports (animation-timeline: scroll()) {
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes scroll-progress {
+  to {
+    scale: 1 1;
+  }
+}
+
+/* WetInk draws the glyphs onto a canvas over the text, so the text itself goes invisible while it
+   stays selectable and announced. Print gets the real text back, because the canvas does not go. */
+[data-wet-ink='on'] {
+  color: transparent;
+}
+
+[data-wet-ink='on']::selection {
+  color: transparent;
+}
+
+/* Print has no canvas, and forced colours overrule the transparent text and would otherwise draw
+   both copies at once, in a colour the reader has asked the browser to replace. */
+@media print, (forced-colors: active) {
+  [data-wet-ink='on'] {
+    color: inherit;
+  }
+
+  [data-wet-ink='on'] canvas {
+    display: none;
+  }
+}
+
+/* Reveal only ever hides content where scripting can bring it back. Browsers without the feature
+   query never match, so the content stays visible and only the animation is lost. */
+@media (scripting: enabled) {
+  @layer base {
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 1100ms var(--ease-brand),
+        transform 1100ms var(--ease-brand);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    [data-reveal][data-in='true'] {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation: none !important;
   }
 }

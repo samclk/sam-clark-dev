@@ -33,3 +33,12 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# unoptimised media originals (web-ready versions live in public/)
+/assets
+
+# Claude Code's local config, and the git worktrees it keeps under it
+.claude/
+
+# shader teaching workspace (local only)
+learning/

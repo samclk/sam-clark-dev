@@ -1,11 +1,12 @@
 import './globals.css';
-import { ReactNode } from 'react';
-import { Space_Mono, Montserrat } from 'next/font/google';
-import { Metadata } from 'next';
-import { animationIds } from '@/utils/animationIds';
+import type { ReactNode } from 'react';
+import { Instrument_Serif, JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google';
+import type { Metadata } from 'next';
+import { ScrollProgress } from '@/components/ScrollProgress';
 
-const TITLE = 'CLK Studio | Sam Clark, Senior Full Stack Developer';
-const DESCRIPTION = 'A dedicated full stack senior developer, determined to make the web a more beautiful place.';
+const TITLE = 'CLK Studio — Sam Clark, Creative Developer';
+const DESCRIPTION =
+  'Sam Clark, creative developer. Ten years building web platforms, design systems and high-performance digital products.';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.clkstudio.co.uk'),
@@ -15,40 +16,39 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     // kept as jpeg because several social scrapers still refuse webp
-    images: ['/me/og.jpg'],
+    images: ['/og.jpg'],
   },
 };
 
-const spaceMono = Space_Mono({
+const schibsted = Schibsted_Grotesk({
   subsets: ['latin'],
-  variable: '--font-space-mono',
+  weight: ['400', '500', '600'],
+  variable: '--font-schibsted',
   display: 'swap',
-  weight: ['400', '700'],
 });
 
-const montserrat = Montserrat({
+const instrument = Instrument_Serif({
   subsets: ['latin'],
-  variable: '--font-montserrat',
+  weight: '400',
+  style: 'italic',
+  variable: '--font-instrument',
   display: 'swap',
-  weight: ['300', '700'],
 });
 
-// the entrance timeline is what reveals the page, so without it every element stays in its start state
-const noScriptStyles = `
-  #${animationIds.preLoader} { display: none !important; }
-  #${animationIds.topBar} { transform: none !important; }
-  #${animationIds.topBarContent}, #${animationIds.overlayContent}, #${animationIds.coords} { opacity: 1 !important; }
-  #${animationIds.overlayContainer} { clip-path: none !important; }
-`;
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${spaceMono.variable} ${montserrat.variable}`}>
-      <body>
-        <noscript>
-          <style>{noScriptStyles}</style>
-        </noscript>
+    <html lang="en" className={`${schibsted.variable} ${instrument.variable} ${jetbrains.variable}`}>
+      {/* the anchor for #top: main starts below the header, so it lands past it */}
+      <body id="top">
         {children}
+        <ScrollProgress />
       </body>
     </html>
   );

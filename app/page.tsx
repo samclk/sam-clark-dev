@@ -1,23 +1,30 @@
 import { tv } from 'tailwind-variants';
-import { MaskEffect } from '@/components/MaskEffect';
-import { Overlay } from '@/components/Overlay';
-import { PageWrapper } from '@/components/PageWrapper';
-import { TopBar } from '@/components/TopBar';
-import { PreLoader } from '@/components/PreLoader';
+import { SiteHeader } from '@/components/SiteHeader';
+import { Hero } from '@/components/Hero';
+import { Mosaic } from '@/components/Mosaic';
+import { WorkList } from '@/components/WorkList';
+import { About } from '@/components/About';
+import { Contact } from '@/components/Contact';
+import { SiteFooter } from '@/components/SiteFooter';
 
-const home = tv({ slots: { overlaySlot: 'relative z-10 grid h-full place-items-center px-4 lg:w-2/3' } });
+/* WetInk draws its canvas BLEED px outside the text on every side, and an absolutely positioned
+   box still counts towards scrollable overflow. Past the gutter that is a horizontal scrollbar. */
+const home = tv({ slots: { main: 'mx-auto max-w-[1440px] overflow-x-clip px-gutter' } });
 
-const { overlaySlot } = home();
+const { main } = home();
 
 export default function Home() {
   return (
-    <PageWrapper>
-      <TopBar />
-      <MaskEffect />
-      <main className={overlaySlot()}>
-        <Overlay headingLevel={2} />
+    <>
+      <SiteHeader />
+      <main className={main()}>
+        <Hero />
+        <Mosaic />
+        <WorkList />
+        <About />
+        <Contact />
       </main>
-      <PreLoader />
-    </PageWrapper>
+      <SiteFooter />
+    </>
   );
 }

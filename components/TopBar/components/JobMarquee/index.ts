@@ -1,1 +1,0 @@
-export { JobMarquee } from './JobMarquee';
