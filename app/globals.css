@@ -11,6 +11,11 @@
   --color-accent: #b4502f;
   --color-status: #3f7a55;
   --color-tile: #eae9e3;
+  /* The two ends of the About portrait's duotone. They belong to the photograph rather than to the
+     page, so they hold their values when the palette turns over: a shadow that followed the text
+     colour would go light in dark mode and screen the picture away to white. */
+  --color-shadow: #14140f;
+  --color-veil: #f4f3ef;
 
   --font-*: initial;
 
@@ -35,33 +40,54 @@
   --breakpoint-clock: 1081px;
 
   --animate-status-pulse: status-pulse 2800ms ease-out infinite;
+  /* mixed from the token rather than restated, so the ring follows the dot when the palette turns */
   @keyframes status-pulse {
     0% {
-      box-shadow: 0 0 0 0 rgb(63 122 85 / 0.5);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-status) 50%, transparent);
     }
     70% {
-      box-shadow: 0 0 0 10px rgb(63 122 85 / 0);
+      box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-status) 0%, transparent);
     }
     100% {
-      box-shadow: 0 0 0 0 rgb(63 122 85 / 0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-status) 0%, transparent);
     }
   }
 }
 
 /* next/font emits these on <html>, so they must be substituted rather than redeclared */
 @theme inline {
-  /* Shadow end of the About portrait's duotone: ink warmed towards the accent. */
-  --color-duotone: color-mix(in oklab, var(--color-ink) 84%, var(--color-accent));
+  /* Shadow end of the About portrait's duotone: its own shadow warmed towards the accent. */
+  --color-duotone: color-mix(in oklab, var(--color-shadow) 84%, var(--color-accent));
 
   --font-sans: var(--font-schibsted);
   --font-serif: var(--font-instrument);
   --font-mono: var(--font-jetbrains);
 }
 
+/* Dark is the same palette turned over: the ink becomes the ground and the paper becomes the text.
+   Redefining the tokens is the whole of it, because every utility reads them through var(). This
+   sits outside @layer theme on purpose, so it wins against the values Tailwind emits there. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #14140f;
+    --color-paper-raised: #1c1b15;
+    --color-ink: #f4f3ef;
+    --color-quiet: #a3a299;
+    --color-faint: #7a796f;
+    --color-hairline: rgb(244 243 239 / 0.15);
+    --color-accent: #d2704a;
+    --color-status: #5aa176;
+    --color-tile: #201f18;
+    --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 30px -12px rgb(0 0 0 / 0.8);
+  }
+}
+
 @layer base {
   /* html carries the ground too, so body's background is not propagated to the canvas. */
   html {
     @apply bg-paper;
+    /* so scrollbars, form controls and the overscroll gutter follow the palette too */
+    color-scheme: light dark;
     scroll-behavior: smooth;
   }
 

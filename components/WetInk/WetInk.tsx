@@ -82,8 +82,10 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
     if (!root || prefersReducedMotion) return;
     if (!('ResizeObserver' in window) || !('IntersectionObserver' in window)) return;
 
-    const ink = readColor('--color-ink');
-    const accent = readColor('--color-accent');
+    // read rather than fixed, because the palette turns over under a running canvas when the system
+    // switches theme, and the glyphs would otherwise keep painting in the colour of the other mode
+    let ink = readColor('--color-ink');
+    let accent = readColor('--color-accent');
 
     const bounds: Bound[] = [];
     const cleanups: Array<() => void> = [];
@@ -262,6 +264,14 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
       });
     };
 
+    const scheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const onScheme = () => {
+      ink = readColor('--color-ink');
+      accent = readColor('--color-accent');
+      wake();
+    };
+    scheme.addEventListener('change', onScheme);
+
     // the runs are measured against the loaded face, so a fallback metric never gets baked in
     const start = () => {
       if (cancelled) return;
@@ -279,6 +289,7 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
 
     return () => {
       cancelled = true;
+      scheme.removeEventListener('change', onScheme);
       if (frame) cancelAnimationFrame(frame);
       for (const cleanup of cleanups) cleanup();
     };

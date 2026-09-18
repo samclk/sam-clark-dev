@@ -16,11 +16,11 @@ const about = tv({
     root: 'flex flex-col items-start gap-8 pt-section nav:flex-row nav:gap-[clamp(32px,6vw,96px)]',
     block: 'flex w-full shrink-0 flex-col gap-3.5 nav:w-[360px]',
     title: 'mono font-normal text-faint',
-    // Duotone: the image screens onto the warm shadow, then paper multiplies over the highlights, so
-    // the photograph carries no white of its own. isolate keeps both blends off the page behind it.
+    // Duotone: the image screens onto the warm shadow, then the veil multiplies over the highlights,
+    // so the photograph carries no white of its own. isolate keeps both blends off the page behind it.
     frame:
-      "relative isolate aspect-3/2 overflow-hidden bg-duotone after:absolute after:inset-0 after:bg-paper after:mix-blend-multiply after:content-['']",
-    image: 'size-full object-cover object-[50%_46%] mix-blend-screen grayscale brightness-[1.06] contrast-[1.18]',
+      "relative isolate aspect-3/2 overflow-hidden bg-duotone after:absolute after:inset-0 after:bg-veil after:mix-blend-multiply after:content-['']",
+    image: 'size-full object-cover object-[50%_46%] mix-blend-screen brightness-[1.06] contrast-[1.18] grayscale',
     caption: 'mono text-faint',
     copy: 'flex w-full max-w-[700px] flex-col gap-7 nav:pt-8',
     lede: 'text-lede leading-[1.48] tracking-[-0.012em] text-pretty',
