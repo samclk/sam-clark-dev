@@ -132,9 +132,16 @@
     transition: opacity 420ms var(--ease-brand);
   }
 
+  /* Pointer only. A tap leaves :hover stuck on a touch device, so the last row tapped would hold
+     every other row dimmed until something else was tapped. */
+  @media (hover: hover) {
+    &:hover > :not(:hover) {
+      opacity: 0.4;
+    }
+  }
+
   /* :focus-visible, not :focus-within — a clicked link keeps focus, so a plain :focus-within would
      leave the list dimmed for good once the reader came back from a target="_blank" tab. */
-  &:hover > :not(:hover),
   &:not(:hover):has(:focus-visible) > :not(:has(:focus-visible)) {
     opacity: 0.4;
   }
