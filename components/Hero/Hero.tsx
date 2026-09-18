@@ -15,7 +15,7 @@ const hero = tv({
     status: 'flex items-center gap-3 mono text-quiet',
     dot: 'size-[7px] animate-status-pulse rounded-full bg-status',
     title:
-      'mt-[clamp(28px,3vw,44px)] max-w-[1120px] text-hero leading-[1.04] font-medium tracking-[-0.028em] text-pretty',
+      'mt-[clamp(28px,3vw,44px)] max-w-[1120px] text-hero leading-[1.04] font-medium tracking-[-0.028em] text-balance nav:text-pretty',
     accent: 'font-serif font-normal tracking-normal italic',
     meta: 'mt-[clamp(48px,7vw,108px)] flex flex-wrap gap-y-7 border-t border-hairline pt-[26px]',
     item: 'flex flex-[1_1_240px] flex-col gap-2.5',
