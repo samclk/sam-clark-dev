@@ -23,7 +23,7 @@ const mosaic = tv({
     // the strapline crowds the heading once they share a line's width
     note: 'ml-auto hidden mono text-faint nav:block',
     grid: 'grid grid-cols-12 gap-3 nav:gap-4',
-    tile: 'overflow-hidden rounded-md bg-tile',
+    tile: 'overflow-hidden rounded-md border border-hairline bg-tile shadow-tile',
     // Safari does not reliably clip a video to a rounded ancestor, so round the element itself too.
     media: 'block size-full rounded-md object-cover',
   },
