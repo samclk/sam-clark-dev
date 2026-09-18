@@ -20,7 +20,8 @@ const mosaic = tv({
     root: 'pt-section',
     head: 'flex items-baseline gap-4 pb-[30px]',
     title: 'mono font-normal text-faint',
-    note: 'ml-auto mono text-faint',
+    // the strapline crowds the heading once they share a line's width
+    note: 'ml-auto hidden mono text-faint nav:block',
     grid: 'grid grid-cols-12 gap-3 nav:gap-4',
     tile: 'overflow-hidden rounded-md bg-tile',
     // Safari does not reliably clip a video to a rounded ancestor, so round the element itself too.
