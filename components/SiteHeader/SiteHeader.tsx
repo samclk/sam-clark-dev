@@ -25,8 +25,9 @@ const siteHeader = tv({
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
     index: 'mr-[7px] text-white/55 transition-colors duration-[420ms] group-hover:text-white',
+    // A standing call to action, not a position indicator: it carries no index because it never
+    // tracks the section you are in.
     pill: 'ml-auto rounded-full border border-white/35 px-4 py-3.5 mono nav:hidden',
-    pillIndex: 'mr-[7px] text-white/55',
     clock: 'hidden min-w-[168px] text-right mono text-white/70 clock:block',
   },
   variants: {
@@ -37,7 +38,7 @@ const siteHeader = tv({
   },
 });
 
-const { wordmark, nav, link, index, pill, pillIndex, clock } = siteHeader();
+const { wordmark, nav, link, index, pill, clock } = siteHeader();
 
 // resolved here so tailwind-variants stays out of the client bundle; only the two strings cross over
 const SHOWN = siteHeader({ hidden: false }).root();
@@ -60,7 +61,6 @@ export const SiteHeader = () => {
       </nav>
 
       <a className={pill()} href="#contact">
-        <span className={pillIndex()}>04</span>
         Contact
       </a>
 
