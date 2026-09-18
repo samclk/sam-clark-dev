@@ -88,10 +88,6 @@
   }
 }
 
-/* The hero pins only where it fits. Shorter than this and sticky would strand its own meta list
-   below the fold, with no scroll left to reach it. */
-@custom-variant tall (@media (min-height: 700px));
-
 /* Mono labels, indices, clock and tags. One definition rather than five utilities per element. */
 @utility mono {
   font-family: var(--font-mono);

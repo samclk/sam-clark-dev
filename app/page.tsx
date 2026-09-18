@@ -27,6 +27,7 @@ export default function Home() {
       <main className={main()}>
         <Hero />
         <div className={over()}>
+          <Hero.Meta />
           <Mosaic />
           <WorkList />
           <About />

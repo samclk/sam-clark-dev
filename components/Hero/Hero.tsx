@@ -9,15 +9,20 @@ const META = [
   { term: 'Available', detail: 'October 2026' },
 ];
 
+/**
+ * Splits at the rule above the meta list, because that rule is the leading edge of everything that
+ * slides over the pinned headline. The meta therefore belongs to whichever layer the page puts it
+ * in, which is why it is a part the caller places rather than markup this section owns.
+ */
 const hero = tv({
   slots: {
-    root: 'pt-[clamp(72px,10vw,150px)] tall:sticky tall:top-0',
+    root: 'sticky top-0 pt-[clamp(72px,10vw,150px)] pb-[clamp(48px,7vw,108px)]',
     status: 'flex items-center gap-3 mono text-quiet',
     dot: 'size-[7px] animate-status-pulse rounded-full bg-status',
     title:
       'mt-[clamp(28px,3vw,44px)] max-w-[1120px] text-hero leading-[1.04] font-medium tracking-[-0.028em] text-balance nav:text-pretty',
     accent: 'font-serif font-normal tracking-normal italic',
-    meta: 'mt-[clamp(48px,7vw,108px)] flex flex-wrap gap-y-7 border-t border-hairline pt-[26px]',
+    meta: 'flex flex-wrap gap-y-7 border-t border-hairline pt-[26px]',
     item: 'flex flex-[1_1_240px] flex-col gap-2.5',
     term: 'mono text-faint',
     detail: 'm-0 text-[clamp(16px,1.2vw,17px)]',
@@ -26,7 +31,24 @@ const hero = tv({
 
 const { root, status, dot, title, accent, meta, item, term, detail } = hero();
 
-export const Hero = () => {
+const HeroMeta = () => {
+  return (
+    <Reveal delay={260}>
+      <dl className={meta()}>
+        {META.map((entry) => (
+          <div className={item()} key={entry.term}>
+            <dt className={term()}>{entry.term}</dt>
+            <dd className={detail()}>{entry.detail}</dd>
+          </div>
+        ))}
+      </dl>
+    </Reveal>
+  );
+};
+
+HeroMeta.displayName = 'Hero.Meta';
+
+const HeroRoot = () => {
   return (
     <section className={root()}>
       <Reveal>
@@ -43,17 +65,10 @@ export const Hero = () => {
           </h1>
         </WetInk>
       </Reveal>
-
-      <Reveal delay={260}>
-        <dl className={meta()}>
-          {META.map((entry) => (
-            <div className={item()} key={entry.term}>
-              <dt className={term()}>{entry.term}</dt>
-              <dd className={detail()}>{entry.detail}</dd>
-            </div>
-          ))}
-        </dl>
-      </Reveal>
     </section>
   );
 };
+
+HeroRoot.displayName = 'Hero';
+
+export const Hero = Object.assign(HeroRoot, { Meta: HeroMeta });
