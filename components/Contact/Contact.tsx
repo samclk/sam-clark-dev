@@ -1,14 +1,9 @@
 import { tv } from 'tailwind-variants';
 import type { HeadingLevel } from '@/types/headingLevel';
 import { WetInk } from '@/components/WetInk';
+import { SOCIALS } from '@/utils/socials';
 
 const EMAIL = 'sam@clkstudio.co.uk';
-
-const SOCIALS = [
-  { label: 'Instagram', href: 'https://www.instagram.com/sam.cl.rk/' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sam-clark-5b712087/' },
-  { label: 'GitHub', href: 'https://github.com/samclk' },
-];
 
 const contact = tv({
   slots: {
