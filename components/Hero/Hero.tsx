@@ -1,5 +1,6 @@
 import { tv } from 'tailwind-variants';
 import { Reveal } from '@/components/Reveal';
+import { WetInk } from '@/components/WetInk';
 
 const META = [
   { term: 'Who', detail: 'Sam Clark, Creative Developer' },
@@ -36,9 +37,11 @@ export const Hero = () => {
       </Reveal>
 
       <Reveal delay={120}>
-        <h1 className={title()}>
-          A creative developer, determined to make the web a <em className={accent()}>more beautiful</em> place.
-        </h1>
+        <WetInk target="h1" settle>
+          <h1 className={title()}>
+            A creative developer, determined to make the web a <em className={accent()}>more beautiful</em> place.
+          </h1>
+        </WetInk>
       </Reveal>
 
       <Reveal delay={260}>

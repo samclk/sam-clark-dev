@@ -1,5 +1,6 @@
 import { tv } from 'tailwind-variants';
 import type { HeadingLevel } from '@/types/headingLevel';
+import { WetInk } from '@/components/WetInk';
 
 const EMAIL = 'sam@clkstudio.co.uk';
 
@@ -30,12 +31,14 @@ export const Contact = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) =
     <section className={root()} id="contact">
       <Heading className={title()}>Contact</Heading>
 
-      <p className={mailWrap()}>
-        <a className={mail()} href={`mailto:${EMAIL}`}>
-          {EMAIL}
-          <span className={rule()} aria-hidden="true" />
-        </a>
-      </p>
+      <WetInk target={`a[href^="mailto:"]`}>
+        <p className={mailWrap()}>
+          <a className={mail()} href={`mailto:${EMAIL}`}>
+            {EMAIL}
+            <span className={rule()} aria-hidden="true" />
+          </a>
+        </p>
+      </WetInk>
 
       <ul className={socials()}>
         {SOCIALS.map((social) => (
