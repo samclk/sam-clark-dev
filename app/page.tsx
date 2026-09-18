@@ -7,7 +7,9 @@ import { About } from '@/components/About';
 import { Contact } from '@/components/Contact';
 import { SiteFooter } from '@/components/SiteFooter';
 
-const home = tv({ slots: { main: 'mx-auto max-w-[1440px] px-gutter' } });
+/* WetInk draws its canvas BLEED px outside the text on every side, and an absolutely positioned
+   box still counts towards scrollable overflow. Past the gutter that is a horizontal scrollbar. */
+const home = tv({ slots: { main: 'mx-auto max-w-[1440px] overflow-x-clip px-gutter' } });
 
 const { main } = home();
 
