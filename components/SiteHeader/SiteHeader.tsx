@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants';
 import { Clock } from '@/components/Clock';
-import { HideOnScroll } from '@/components/HideOnScroll';
+import { HeaderLayer } from '@/components/HeaderLayer';
 
 const SECTIONS = [
   { index: '01', label: 'Highlights', href: '#highlights' },
@@ -16,11 +16,15 @@ const SECTIONS = [
  * would inverse: the darker the source, the lighter the result.
  *
  * It retreats on the way down and comes back on the way up, because with no ground of its own it
- * collides with whatever it sits on. Keyboard focus brings it back regardless of scroll direction.
+ * collides with whatever it sits on.
+ *
+ * Over the hero it sits in the hero's own layer and lets the sliding panel pass over it, so the
+ * panel's rule arrives as one edge rather than racing a header down the same line. Keyboard focus
+ * lifts it clear of both, since a focused link under the panel would take focus somewhere invisible.
  */
 const siteHeader = tv({
   slots: {
-    root: 'sticky top-0 z-50 mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-white mix-blend-difference transition-transform duration-[420ms] ease-brand focus-within:translate-y-0',
+    root: 'sticky top-0 mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-white mix-blend-difference transition-transform duration-[420ms] ease-brand focus-within:z-50 focus-within:translate-y-0',
     wordmark: 'ln mono font-medium tracking-[0.14em]',
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
@@ -31,22 +35,26 @@ const siteHeader = tv({
     clock: 'hidden min-w-[168px] text-right mono text-white/70 clock:block',
   },
   variants: {
-    hidden: {
-      true: { root: '-translate-y-full' },
-      false: { root: 'translate-y-0' },
+    mode: {
+      attached: { root: 'z-0 translate-y-0' },
+      shown: { root: 'z-50 translate-y-0' },
+      hidden: { root: 'z-50 -translate-y-full' },
     },
   },
 });
 
 const { wordmark, nav, link, index, pill, clock } = siteHeader();
 
-// resolved here so tailwind-variants stays out of the client bundle; only the two strings cross over
-const SHOWN = siteHeader({ hidden: false }).root();
-const HIDDEN = siteHeader({ hidden: true }).root();
+// resolved here so tailwind-variants stays out of the client bundle; only the strings cross over
+const CLASS_NAMES = {
+  attached: siteHeader({ mode: 'attached' }).root(),
+  shown: siteHeader({ mode: 'shown' }).root(),
+  hidden: siteHeader({ mode: 'hidden' }).root(),
+};
 
 export const SiteHeader = () => {
   return (
-    <HideOnScroll className={SHOWN} hiddenClassName={HIDDEN}>
+    <HeaderLayer classNames={CLASS_NAMES} edge="[data-panel-edge]">
       <a className={wordmark()} href="#top">
         CLK Studio
       </a>
@@ -67,6 +75,6 @@ export const SiteHeader = () => {
       <p className={clock()}>
         Local time <Clock />
       </p>
-    </HideOnScroll>
+    </HeaderLayer>
   );
 };

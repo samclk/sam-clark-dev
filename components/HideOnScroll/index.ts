@@ -1,1 +1,0 @@
-export { HideOnScroll } from './HideOnScroll';

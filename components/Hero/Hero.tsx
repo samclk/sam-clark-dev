@@ -34,7 +34,7 @@ const { root, status, dot, title, accent, meta, item, term, detail } = hero();
 const HeroMeta = () => {
   return (
     <Reveal delay={260}>
-      <dl className={meta()}>
+      <dl className={meta()} data-panel-edge="">
         {META.map((entry) => (
           <div className={item()} key={entry.term}>
             <dt className={term()}>{entry.term}</dt>
