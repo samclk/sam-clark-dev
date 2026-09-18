@@ -48,6 +48,7 @@ const workList = tv({
     head: 'flex items-baseline gap-4 pb-[30px]',
     title: 'mono font-normal text-faint',
     note: 'ml-auto mono text-faint',
+    list: 'dim-siblings',
     item: 'last:border-b last:border-hairline',
     row: 'group relative flex flex-wrap items-center gap-4 border-t border-hairline px-1.5 py-[clamp(22px,2.6vw,36px)] nav:flex-nowrap nav:gap-[clamp(16px,2vw,32px)]',
     rule: 'absolute inset-x-0 -bottom-px h-px origin-left scale-x-0 bg-accent transition-transform duration-[760ms] ease-brand group-hover:scale-x-100',
@@ -64,7 +65,7 @@ const workList = tv({
   },
 });
 
-const { root, head, title, note, item, row, rule, index, name, right, tag, meta, separator, arrow } = workList();
+const { root, head, title, note, list, item, row, rule, index, name, right, tag, meta, separator, arrow } = workList();
 
 export const WorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) => {
   const Heading = `h${headingLevel}` as const;
@@ -76,7 +77,7 @@ export const WorkList = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) 
         <p className={note()}>Six selected</p>
       </div>
 
-      <ul>
+      <ul className={list()}>
         {WORKS.map((work, i) => (
           <li className={item()} key={work.name}>
             <a className={row()} href={work.url} target="_blank" rel="noreferrer">
