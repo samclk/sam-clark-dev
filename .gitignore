@@ -33,3 +33,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# unoptimised media originals (web-ready versions live in public/)
+/assets
