@@ -9,22 +9,15 @@ const SECTIONS = [
 ];
 
 /**
- * Pins with the hero as one block: the sliding panel covers both, and the scroll back up returns
- * both together. It passes over nothing, so it needs no blend and takes the ordinary ink tokens.
+ * Carries no position of its own. It shares the page's pinned sheet with the hero, which is what
+ * keeps the two from ever moving against each other, and that sheet owns the sticking and the
+ * layer. Centring and gutter come from the same place, so neither is repeated here.
  *
- * Fixed rather than sticky, and so out of flow: a sticky header takes flow space, which would start
- * the hero below it and slide the headline that far before it pinned. The hero pays for the space
- * with its own top padding instead, so the two are locked together from the first pixel.
- *
- * It sits one step above the hero and well below the panel. The hero's own top padding covers the
- * nav, and a tie on z-index hands every click to whichever came later in the DOM.
- *
- * Keyboard focus lifts it clear of the panel, since a nav link focused while the panel covered it
- * would otherwise take focus somewhere invisible.
+ * It passes over nothing now, so it needs no blend and takes the ordinary ink tokens.
  */
 const siteHeader = tv({
   slots: {
-    root: 'fixed inset-x-0 top-0 z-[1] mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-ink focus-within:z-50',
+    root: 'flex items-center gap-10 pt-10 pb-4 text-ink',
     wordmark: 'ln mono font-medium tracking-[0.14em]',
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
