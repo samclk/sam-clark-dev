@@ -164,7 +164,13 @@
   color: transparent;
 }
 
-@media print {
+[data-wet-ink='on']::selection {
+  color: transparent;
+}
+
+/* Print has no canvas, and forced colours overrule the transparent text and would otherwise draw
+   both copies at once, in a colour the reader has asked the browser to replace. */
+@media print, (forced-colors: active) {
   [data-wet-ink='on'] {
     color: inherit;
   }

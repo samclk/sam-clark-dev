@@ -1,22 +1,26 @@
-'use client';
-import * as React from 'react';
-import { usePrefersReducedMotion } from '@/utils/usePrefersReducedMotion';
-import { createSketch, readColor } from './gl';
-import { BLEED, drawText } from './textToCanvas';
-import { WET_INK } from './shader';
-
 /**
  * Lays the wet ink shader over live text without the text's own component knowing about it.
  *
  * It takes a selector rather than an element, so the component it decorates stays a Server
  * Component: its markup arrives here as children and only this wrapper crosses to the client. The
- * DOM text stays exactly where it is and only turns transparent, so selection, find-in-page and
- * screen readers are untouched, and the canvas on top is decorative. Nothing mounts under reduced
- * motion, when WebGL is missing, or if the text cannot be measured, and in each case the page is
- * simply the page.
+ * children must be static markup, because a target is bound once and never looked up again.
+ *
+ * The DOM text stays exactly where it is and only turns transparent, so selection, find-in-page,
+ * screen readers and the prerendered HTML are untouched, and the canvas on top is decorative. That
+ * transparency is the whole risk in this component: text that is hidden with nothing drawn over it
+ * is gone from the page with no error anywhere. So the element is marked, and therefore hidden,
+ * only once a copy of its glyphs has actually been rasterised, and the mark comes straight back off
+ * if the GL context is lost. Under reduced motion, without WebGL, without the observers, or when
+ * the text cannot be copied faithfully, nothing mounts and the page is untouched.
  */
+'use client';
+import * as React from 'react';
+import { usePrefersReducedMotion } from '@/utils/usePrefersReducedMotion';
+import { createSketch, readColor, type Sketch } from './gl';
+import { BLEED, drawText } from './textToCanvas';
+import { WET_INK } from './shader';
 
-/** Seconds the drying ramp takes, and how long the ripple lags the cursor. */
+/** Seconds the drying ramp takes, how long the ripple lags the cursor, and the hover fade. */
 const DRY_SECONDS = 1.7;
 const DRAG_SECONDS = 0.8;
 const HOVER_SECONDS = 0.38;
@@ -27,13 +31,12 @@ type WetInkProps = {
   target: string;
   /** Whether the ink dries on arrival. Text that is already on the page starts dry. */
   settle?: boolean;
-  className?: string;
 };
 
 type Bound = {
-  element: HTMLElement;
-  sketch: NonNullable<ReturnType<typeof createSketch>>;
-  texture: HTMLCanvasElement;
+  sketch: Sketch;
+  /** CSS pixel size of the canvas, which is what the shader measures distances in. */
+  size: [number, number];
   progress: number;
   hover: number;
   arrived: boolean;
@@ -60,7 +63,7 @@ const ramp = (value: number, target: number, dt: number, duration: number) => {
 const damp = (value: number, target: number, dt: number, tau: number) =>
   value + (target - value) * (1 - Math.exp(-dt / tau));
 
-export const WetInk = ({ children, target, settle = false, className }: WetInkProps) => {
+export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -99,7 +102,7 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
         if (Math.hypot(trail[0], trail[1]) > 0.5) busy = true;
 
         bound.sketch.draw({
-          uRes: [bound.sketch.canvas.width, bound.sketch.canvas.height],
+          uRes: bound.size,
           uTime: now / 1000,
           uPointer: bound.pointer,
           uTrail: trail,
@@ -124,17 +127,9 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
       if (!sketch) return;
 
       const texture = document.createElement('canvas');
-      const image = drawText(element, texture);
-      // no measurable text means no canvas and no transparent text, so the page loses nothing
-      if (!image) {
-        sketch.destroy();
-        return;
-      }
-
       const bound: Bound = {
-        element,
         sketch,
-        texture,
+        size: [1, 1],
         progress: settle ? 0 : 1,
         hover: 0,
         arrived: !settle,
@@ -144,14 +139,19 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
         aimed: false,
       };
 
+      /** False whenever the glyphs could not be copied, which must leave the real text showing. */
       const paint = () => {
-        const next = drawText(element, texture);
-        if (!next) return;
-        sketch.resize(next.width, next.height);
-        sketch.setTexture(next.canvas);
+        const image = drawText(element, texture);
+        if (!image) return false;
+        sketch.resize(image.width, image.height);
+        if (!sketch.setTexture(image.canvas)) return false;
+        bound.size = [image.width, image.height];
+        return true;
       };
 
-      if (getComputedStyle(element).position === 'static') element.style.position = 'relative';
+      const positionWasStatic = getComputedStyle(element).position === 'static';
+      if (positionWasStatic) element.style.position = 'relative';
+      sketch.canvas.ariaHidden = 'true';
       Object.assign(sketch.canvas.style, {
         position: 'absolute',
         left: `${-BLEED}px`,
@@ -159,8 +159,14 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
         pointerEvents: 'none',
       });
       element.append(sketch.canvas);
+
+      if (!paint()) {
+        if (positionWasStatic) element.style.position = '';
+        sketch.destroy();
+        return;
+      }
+      // only now is there something to look at, so only now may the real text go
       element.dataset.wetInk = 'on';
-      paint();
       bounds.push(bound);
 
       const onEnter = () => {
@@ -174,11 +180,10 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
       };
       const onMove = (event: PointerEvent) => {
         const rect = sketch.canvas.getBoundingClientRect();
-        const scale = sketch.canvas.width / Math.max(rect.width, 1);
         bound.aim = [
-          (event.clientX - rect.left) * scale,
+          event.clientX - rect.left,
           // y-up, to match the flipped texture the shader samples
-          sketch.canvas.height - (event.clientY - rect.top) * scale,
+          bound.size[1] - (event.clientY - rect.top),
         ];
         if (!bound.aimed) {
           bound.pointer = [...bound.aim];
@@ -197,9 +202,15 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
       element.addEventListener('pointermove', onMove);
       sketch.canvas.addEventListener('webglcontextlost', onContextLost);
 
+      // a window drag fires this every frame, and a repaint is a full re-measure and re-upload
+      let repaint = 0;
       const resizeObserver = new ResizeObserver(() => {
-        paint();
-        wake();
+        if (repaint) return;
+        repaint = requestAnimationFrame(() => {
+          repaint = 0;
+          if (paint()) wake();
+          else onContextLost();
+        });
       });
       resizeObserver.observe(element);
 
@@ -207,6 +218,7 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
         ([entry]) => {
           if (!entry?.isIntersecting) return;
           bound.arrived = true;
+          intersectionObserver.disconnect();
           wake();
         },
         { rootMargin: '0px 0px -10% 0px', threshold: 0.2 },
@@ -218,10 +230,11 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
         element.removeEventListener('pointerleave', onLeave);
         element.removeEventListener('pointermove', onMove);
         sketch.canvas.removeEventListener('webglcontextlost', onContextLost);
+        if (repaint) cancelAnimationFrame(repaint);
         resizeObserver.disconnect();
         intersectionObserver.disconnect();
         delete element.dataset.wetInk;
-        element.style.position = '';
+        if (positionWasStatic) element.style.position = '';
         sketch.destroy();
       });
     };
@@ -229,20 +242,28 @@ export const WetInk = ({ children, target, settle = false, className }: WetInkPr
     // the runs are measured against the loaded face, so a fallback metric never gets baked in
     const start = () => {
       if (cancelled) return;
-      root.querySelectorAll<HTMLElement>(target).forEach(bind);
+      for (const element of root.querySelectorAll<HTMLElement>(target)) {
+        // one target failing must not abandon the rest, or leave a half-bound element hidden
+        try {
+          bind(element);
+        } catch {
+          delete element.dataset.wetInk;
+        }
+      }
       wake();
     };
-    document.fonts ? document.fonts.ready.then(start) : start();
+    void document.fonts.ready.then(start);
 
     return () => {
       cancelled = true;
       if (frame) cancelAnimationFrame(frame);
-      cleanups.forEach((cleanup) => cleanup());
+      for (const cleanup of cleanups) cleanup();
     };
   }, [target, settle, prefersReducedMotion]);
 
+  // contents, so neither call site gains a layout box it did not have before
   return (
-    <div ref={rootRef} className={className}>
+    <div ref={rootRef} style={{ display: 'contents' }}>
       {children}
     </div>
   );

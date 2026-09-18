@@ -15,6 +15,7 @@ const contact = tv({
     root: 'mt-section border-t border-hairline pt-section',
     title: 'mono font-normal text-faint',
     mailWrap: 'mt-10',
+    // the hover colour is dead while WetInk is drawing, and is the fallback wherever it stands down
     mail: 'group relative inline-block text-mail font-medium tracking-[-0.028em] break-words transition-colors duration-[420ms] hover:text-accent',
     rule: 'absolute inset-x-0 bottom-1 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-[760ms] ease-brand group-hover:scale-x-100',
     socials: 'mt-14 flex flex-wrap gap-9',

@@ -13,10 +13,18 @@ export type Uniforms = Record<string, number | readonly number[]>;
 export type Sketch = {
   canvas: HTMLCanvasElement;
   resize: (cssWidth: number, cssHeight: number) => void;
-  setTexture: (source: TexImageSource) => void;
+  setTexture: (source: HTMLCanvasElement) => boolean;
   draw: (uniforms: Uniforms) => void;
   destroy: () => void;
 };
+
+/**
+ * Device pixels per CSS pixel for anything this module rasterises, capped so a wide headline on a
+ * 3x screen does not allocate a pointlessly large buffer. Everything outside the canvas buffer,
+ * including every distance the shader works in, stays in CSS pixels, so the effect is the same size
+ * on a laptop as on the monitor next to it.
+ */
+export const renderScale = () => Math.min(window.devicePixelRatio || 1, 2);
 
 const compile = (gl: WebGLRenderingContext, type: number, source: string) => {
   const shader = gl.createShader(type);
@@ -24,6 +32,8 @@ const compile = (gl: WebGLRenderingContext, type: number, source: string) => {
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+  // a vendor-specific compile failure is otherwise a component that simply never appears
+  if (process.env.NODE_ENV !== 'production') console.error('WetInk shader:', gl.getShaderInfoLog(shader));
   gl.deleteShader(shader);
   return null;
 };
@@ -37,12 +47,23 @@ export const createSketch = (fragment: string): Sketch | null => {
   const vertexShader = compile(gl, gl.VERTEX_SHADER, VERTEX);
   const fragmentShader = compile(gl, gl.FRAGMENT_SHADER, fragment);
   const program = gl.createProgram();
-  if (!vertexShader || !fragmentShader || !program) return null;
+
+  const abandon = () => {
+    if (vertexShader) gl.deleteShader(vertexShader);
+    if (fragmentShader) gl.deleteShader(fragmentShader);
+    if (program) gl.deleteProgram(program);
+    return null;
+  };
+
+  if (!vertexShader || !fragmentShader || !program) return abandon();
 
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    if (process.env.NODE_ENV !== 'production') console.error('WetInk program:', gl.getProgramInfoLog(program));
+    return abandon();
+  }
   gl.useProgram(program);
 
   const buffer = gl.createBuffer();
@@ -73,18 +94,21 @@ export const createSketch = (fragment: string): Sketch | null => {
     canvas,
 
     resize: (cssWidth, cssHeight) => {
-      // capped so a wide headline on a 3x screen does not allocate a pointlessly large buffer
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.max(1, Math.round(cssWidth * dpr));
-      canvas.height = Math.max(1, Math.round(cssHeight * dpr));
+      const scale = renderScale();
+      canvas.width = Math.max(1, Math.round(cssWidth * scale));
+      canvas.height = Math.max(1, Math.round(cssHeight * scale));
       canvas.style.width = `${cssWidth}px`;
       canvas.style.height = `${cssHeight}px`;
       gl.viewport(0, 0, canvas.width, canvas.height);
     },
 
+    // false when the source is larger than the GPU will take, where texImage2D would leave it blank
     setTexture: (source) => {
+      const limit = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+      if (source.width > limit || source.height > limit) return false;
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+      return true;
     },
 
     draw: (uniforms) => {
