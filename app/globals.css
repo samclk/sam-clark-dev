@@ -90,6 +90,16 @@
   text-transform: uppercase;
 }
 
+/* Middot between inline items, so a list needs no separator element per gap. It hangs off the
+   preceding item rather than the next one, so a wrap never leaves a dot starting a line. */
+@utility dot-between {
+  & > *:not(:last-child)::after {
+    content: '\00B7';
+    margin-left: 4px;
+    color: var(--color-faint);
+  }
+}
+
 /* Underline that wipes out to the left and back in from the right */
 @utility ln {
   position: relative;

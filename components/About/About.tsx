@@ -2,6 +2,14 @@ import Image from 'next/image';
 import { tv } from 'tailwind-variants';
 import type { HeadingLevel } from '@/types/headingLevel';
 
+/** Order here is the order on the page. Grouped by what the work is, not by vendor. */
+const STACK = [
+  { area: 'Core', items: ['React', 'Next.js', 'TypeScript'] },
+  { area: 'Interface', items: ['Tailwind', 'Design systems', 'Component libraries'] },
+  { area: 'Motion & 3D', items: ['GSAP', 'Framer Motion', 'Three.js', 'WebGL'] },
+  { area: 'Platforms', items: ['Sanity', 'Shopify', 'Commerce Layer'] },
+];
+
 const about = tv({
   slots: {
     root: 'flex flex-col items-start gap-8 pt-section nav:flex-row nav:gap-[clamp(32px,6vw,96px)]',
@@ -12,13 +20,21 @@ const about = tv({
     image:
       'size-full object-cover object-[50%_32%] transition-transform duration-[1400ms] ease-brand group-hover:scale-[1.035]',
     caption: 'mono text-faint',
-    copy: 'flex max-w-[700px] flex-col gap-7 nav:pt-8',
+    copy: 'flex w-full max-w-[700px] flex-col gap-7 nav:pt-8',
     lede: 'text-lede leading-[1.48] tracking-[-0.012em] text-pretty',
     body: 'leading-[1.62] text-pretty text-quiet',
+    stackBlock: 'flex flex-col gap-3.5 pt-3',
+    stackTitle: 'mono text-faint',
+    stack: 'border-b border-hairline',
+    row: 'flex flex-col gap-2 border-t border-hairline py-[18px] nav:flex-row nav:items-baseline nav:gap-8',
+    area: 'mono text-faint nav:w-[132px] nav:shrink-0',
+    items:
+      'dot-between flex flex-wrap items-baseline gap-x-2.5 gap-y-1.5 font-mono text-[13px] tracking-[0.01em] text-quiet',
   },
 });
 
-const { root, block, title, frame, image, caption, copy, lede, body } = about();
+const { root, block, title, frame, image, caption, copy, lede, body, stackBlock, stackTitle, stack, row, area, items } =
+  about();
 
 export const About = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) => {
   const Heading = `h${headingLevel}` as const;
@@ -35,15 +51,33 @@ export const About = ({ headingLevel = 2 }: { headingLevel?: HeadingLevel }) => 
 
       <div className={copy()}>
         <p className={lede()}>
-          Ten years building web platforms, design systems and high-performance digital products — across SaaS,
-          e-commerce and agency work.
+          I&rsquo;m Sam. I&rsquo;ve spent about ten years building for the web, and I still like it.
         </p>
         <p className={body()}>
-          I live in the layer where engineering meets craft: motion in Framer Motion and GSAP, interactive work in
-          Three.js and WebGL, and React, Next.js and TypeScript underneath it. Most of what I build is meant to be
-          handed over — component libraries, page builders and CMS architectures that let content and marketing teams
-          move on their own without the detail falling apart.
+          Most of what I do is platforms and design systems, across SaaS, e-commerce and agency projects. The part I
+          actually care about is what happens after launch: whether the component library is pleasant to work in,
+          whether a marketing team can ship a new page without asking a developer first.
         </p>
+        <p className={body()}>
+          The rest of the time I&rsquo;m making things move. If something on a site looks like it took too long to
+          build, there&rsquo;s a good chance I enjoyed building it.
+        </p>
+
+        <div className={stackBlock()}>
+          <p className={stackTitle()}>Stack</p>
+          <dl className={stack()}>
+            {STACK.map((group) => (
+              <div className={row()} key={group.area}>
+                <dt className={area()}>{group.area}</dt>
+                <dd className={items()}>
+                  {group.items.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   );
