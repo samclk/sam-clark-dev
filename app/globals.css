@@ -48,6 +48,9 @@
 
 /* next/font emits these on <html>, so they must be substituted rather than redeclared */
 @theme inline {
+  /* Shadow end of the About portrait's duotone: ink warmed towards the accent. */
+  --color-duotone: color-mix(in oklab, var(--color-ink) 84%, var(--color-accent));
+
   --font-sans: var(--font-schibsted);
   --font-serif: var(--font-instrument);
   --font-mono: var(--font-jetbrains);
