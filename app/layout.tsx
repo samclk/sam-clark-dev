@@ -1,6 +1,6 @@
 import './globals.css';
 import type { ReactNode } from 'react';
-import { Instrument_Serif, JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google';
+import { JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google';
 import type { Metadata } from 'next';
 import { ScrollProgress } from '@/components/ScrollProgress';
 import { SITE_URL } from '@/utils/siteUrl';
@@ -60,14 +60,6 @@ const schibsted = Schibsted_Grotesk({
   display: 'swap',
 });
 
-const instrument = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  style: 'italic',
-  variable: '--font-instrument',
-  display: 'swap',
-});
-
 const jetbrains = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
@@ -77,7 +69,7 @@ const jetbrains = JetBrains_Mono({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-GB" className={`${schibsted.variable} ${instrument.variable} ${jetbrains.variable}`}>
+    <html lang="en-GB" className={`${schibsted.variable} ${jetbrains.variable}`}>
       {/* the anchor for #top: main starts below the header, so it lands past it */}
       <body id="top">
         {children}

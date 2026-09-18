@@ -60,7 +60,6 @@
   --color-duotone: color-mix(in oklab, var(--color-shadow) 84%, var(--color-accent));
 
   --font-sans: var(--font-schibsted);
-  --font-serif: var(--font-instrument);
   --font-mono: var(--font-jetbrains);
 }
 
