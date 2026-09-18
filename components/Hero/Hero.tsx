@@ -21,7 +21,6 @@ const hero = tv({
     dot: 'size-[7px] animate-status-pulse rounded-full bg-status',
     title:
       'mt-[clamp(28px,3vw,44px)] max-w-[1120px] text-hero leading-[1.04] font-medium tracking-[-0.028em] text-balance nav:text-pretty',
-    accent: 'font-serif font-normal tracking-normal italic',
     meta: 'flex flex-wrap gap-y-7 border-t border-hairline pt-[26px]',
     item: 'flex flex-[1_1_240px] flex-col gap-2.5',
     term: 'mono text-faint',
@@ -29,7 +28,7 @@ const hero = tv({
   },
 });
 
-const { root, status, dot, title, accent, meta, item, term, detail } = hero();
+const { root, status, dot, title, meta, item, term, detail } = hero();
 
 const HeroMeta = () => {
   return (
@@ -60,9 +59,7 @@ const HeroRoot = () => {
 
       <Reveal delay={120}>
         <WetInk target="h1" settle>
-          <h1 className={title()}>
-            A creative developer, determined to make the web a <em className={accent()}>more beautiful</em> place.
-          </h1>
+          <h1 className={title()}>Creative developer. I make interfaces worth using.</h1>
         </WetInk>
       </Reveal>
     </section>

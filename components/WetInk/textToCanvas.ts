@@ -2,7 +2,7 @@
  * Redraws an element's live text into a 2D canvas so a shader can push the pixels around.
  *
  * It measures the real layout rather than re-wrapping: every text node is split into per-line runs
- * with Range rects, so wrapping, alignment and the italic serif span in the headline all come out
+ * with Range rects, so wrapping, alignment and any inline span's own styling all come out
  * of the browser's own line breaking and are simply copied.
  *
  * Because the real text is hidden once this succeeds, every way of drawing nothing has to be
