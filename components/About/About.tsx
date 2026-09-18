@@ -8,6 +8,7 @@ const STACK = [
   { area: 'Interface', items: ['Tailwind', 'Design systems', 'Component libraries'] },
   { area: 'Motion & 3D', items: ['GSAP', 'Framer Motion', 'Three.js', 'WebGL'] },
   { area: 'Platforms', items: ['Sanity', 'Shopify', 'Commerce Layer'] },
+  { area: 'AI', items: ['Claude Code', 'Skill orchestration', 'Subagents', 'MCP'] },
 ];
 
 const about = tv({
