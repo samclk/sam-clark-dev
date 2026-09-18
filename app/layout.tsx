@@ -2,6 +2,7 @@ import './globals.css';
 import type { ReactNode } from 'react';
 import { Instrument_Serif, JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google';
 import type { Metadata } from 'next';
+import { ScrollProgress } from '@/components/ScrollProgress';
 
 const TITLE = 'CLK Studio — Sam Clark, Creative Developer';
 const DESCRIPTION =
@@ -44,7 +45,10 @@ const jetbrains = JetBrains_Mono({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${schibsted.variable} ${instrument.variable} ${jetbrains.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ScrollProgress />
+      </body>
     </html>
   );
 }
