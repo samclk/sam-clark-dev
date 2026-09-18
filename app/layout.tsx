@@ -45,7 +45,8 @@ const jetbrains = JetBrains_Mono({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${schibsted.variable} ${instrument.variable} ${jetbrains.variable}`}>
-      <body>
+      {/* the anchor for #top: main starts below the header, so it lands past it */}
+      <body id="top">
         {children}
         <ScrollProgress />
       </body>

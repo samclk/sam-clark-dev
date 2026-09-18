@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
-      <main className={main()} id="top">
+      <main className={main()}>
         <Hero />
         <Mosaic />
         <WorkList />
