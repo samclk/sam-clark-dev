@@ -22,8 +22,8 @@ import { WET_INK } from './shader';
 
 /** Seconds the drying ramp takes, how long the ripple lags the cursor, and the hover fade. */
 const DRY_SECONDS = 1.7;
-const DRAG_SECONDS = 0.8;
-const HOVER_SECONDS = 0.38;
+const DRAG_SECONDS = 1.9;
+const HOVER_SECONDS = 0.55;
 
 type WetInkProps = {
   children: React.ReactNode;
@@ -99,7 +99,9 @@ export const WetInk = ({ children, target, settle = false }: WetInkProps) => {
         const trail: [number, number] = [bound.aim[0] - bound.pointer[0], bound.aim[1] - bound.pointer[1]];
         // a held pointer keeps the ripple moving, so a finished ramp must not stop the loop under it
         if (bound.hovered || bound.progress !== dry || bound.hover !== hovered) busy = true;
-        if (Math.hypot(trail[0], trail[1]) > 0.5) busy = true;
+        // Only while the ripple is still visible: with the lag at DRAG_SECONDS the trail takes
+        // about 13s to fall under half a pixel, long after the hover ramp has faded it to nothing.
+        if (bound.hover > 0.001 && Math.hypot(trail[0], trail[1]) > 0.5) busy = true;
 
         bound.sketch.draw({
           uRes: bound.size,

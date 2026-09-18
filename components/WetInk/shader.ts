@@ -52,16 +52,16 @@ void main() {
   vec2 rel = vUv * uRes - uPointer;
   float lag = length(uTrail);
   vec2 axis = lag > 0.5 ? uTrail / lag : vec2(1.0, 0.0);
-  float stretch = 1.0 + min(lag * 0.028, 1.3);
+  float stretch = 1.0 + min(lag * 0.022, 2.1);
   float dist = length(vec2(dot(rel, axis) / stretch, dot(rel, vec2(-axis.y, axis.x))));
   vec2 dir = normalize(rel + vec2(0.001));
-  float wave = sin(dist * 0.32 - uTime * 1.9) * exp(-dist * 0.048) * uHover;
+  float wave = sin(dist * 0.22 - uTime * 1.1) * exp(-dist * 0.028) * uHover;
 
   vec2 flow = vec2(
     fbm(vUv * 5.0 + uTime * 0.06),
     fbm(vUv * 5.0 + 17.3 - uTime * 0.05)
   ) - 0.5;
-  vec2 uv = vUv + flow * wet * 17.0 * px + dir * wave * 1.5 * px;
+  vec2 uv = vUv + flow * wet * 17.0 * px + dir * wave * 3.6 * px;
 
   float r = wet * 1.7;
   float a =
@@ -75,10 +75,10 @@ void main() {
   float sharpened = smoothstep(0.38 - 0.26 * wet, 0.62 + 0.10 * wet, a);
   a = mix(a, sharpened, wet);
   // the glyph thickens a touch at the crest, which is what sells the ripple as liquid, not a warp
-  a += (texture2D(uTex, uv + dir * 0.7 * px).a - a) * wave * 0.8;
+  a += (texture2D(uTex, uv + dir * 1.4 * px).a - a) * wave * 1.15;
 
   vec3 col = mix(uInk, uInk * 0.72 + uAccent * 0.14, wet * 0.7);
-  col = mix(col, uAccent, exp(-dist * 0.044) * uHover * 0.6);
+  col = mix(col, uAccent, exp(-dist * 0.028) * uHover * 0.85);
 
   gl_FragColor = vec4(col, clamp(a, 0.0, 1.0));
 }
