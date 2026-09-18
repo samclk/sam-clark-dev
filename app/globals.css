@@ -11,8 +11,6 @@
   --color-accent: #b4502f;
   --color-status: #3f7a55;
   --color-tile: #eae9e3;
-  /* only for the blended header: difference needs a white source to land on ink over paper */
-  --color-white: #ffffff;
 
   --font-*: initial;
 
@@ -26,6 +24,10 @@
 
   /* Ink-tinted rather than black, so a raised tile warms the paper under it instead of greying it. */
   --shadow-tile: 0 1px 2px rgb(20 20 15 / 0.05), 0 10px 30px -12px rgb(20 20 15 / 0.2);
+
+  /* The fixed header's height, which leaves no flow space behind it for the hero to start below.
+     104 clears the 103 the mobile pill's border costs; every other width measures 101. */
+  --spacing-nav: 104px;
 
   --spacing-gutter: clamp(24px, 5.2vw, 120px);
   --spacing-section: clamp(88px, 11vw, 168px);
@@ -61,8 +63,7 @@
 }
 
 @layer base {
-  /* html carries the ground too, so body's background is not propagated to the canvas. The canvas is
-     not part of the blending backdrop, and without this the sticky header has nothing to blend with. */
+  /* html carries the ground too, so body's background is not propagated to the canvas. */
   html {
     @apply bg-paper;
     scroll-behavior: smooth;

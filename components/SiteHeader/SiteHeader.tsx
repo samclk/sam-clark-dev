@@ -9,32 +9,30 @@ const SECTIONS = [
 ];
 
 /**
- * Sticky with no ground of its own. Under mix-blend-difference the source has to be white to land
- * near ink on paper, and the same white inverts to near-paper over a dark image, so the header stays
- * legible over anything it passes. Hierarchy comes from alpha rather than the grey tokens, which
- * would inverse: the darker the source, the lighter the result.
+ * Pins with the hero as one block: the sliding panel covers both, and the scroll back up returns
+ * both together. It passes over nothing, so it needs no blend and takes the ordinary ink tokens.
  *
- * It pins with the hero rather than above it, in the layer the sliding panel covers, so the two
- * behave as one block: the panel passes over both and the scroll back up returns both together. A
- * header that floated free would slide in on its own and read as a second movement.
+ * Fixed rather than sticky, and so out of flow: a sticky header takes flow space, which would start
+ * the hero below it and slide the headline that far before it pinned. The hero pays for the space
+ * with its own top padding instead, so the two are locked together from the first pixel.
  *
  * It sits one step above the hero and well below the panel. The hero's own top padding covers the
- * nav once pinned, and a tie on z-index hands every click to whichever came later in the DOM.
+ * nav, and a tie on z-index hands every click to whichever came later in the DOM.
  *
  * Keyboard focus lifts it clear of the panel, since a nav link focused while the panel covered it
  * would otherwise take focus somewhere invisible.
  */
 const siteHeader = tv({
   slots: {
-    root: 'sticky top-0 z-[1] mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-white mix-blend-difference focus-within:z-50',
+    root: 'fixed inset-x-0 top-0 z-[1] mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-ink focus-within:z-50',
     wordmark: 'ln mono font-medium tracking-[0.14em]',
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
-    index: 'mr-[7px] text-white/55 transition-colors duration-[420ms] group-hover:text-white',
+    index: 'mr-[7px] text-faint transition-colors duration-[420ms] group-hover:text-ink',
     // A standing call to action, not a position indicator: it carries no index because it never
     // tracks the section you are in.
-    pill: 'ml-auto rounded-full border border-white/35 px-4 py-3.5 mono nav:hidden',
-    clock: 'hidden min-w-[168px] text-right mono text-white/70 clock:block',
+    pill: 'ml-auto rounded-full border border-hairline px-4 py-3.5 mono nav:hidden',
+    clock: 'hidden min-w-[168px] text-right mono text-quiet clock:block',
   },
 });
 
