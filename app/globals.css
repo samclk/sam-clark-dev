@@ -158,15 +158,6 @@
   }
 }
 
-/* Each line of a split heading rises out of its own mask. The padding gives descenders and the
-   italic's overhang room inside the mask, and the negative margin takes it back off the layout. */
-@utility line-mask {
-  display: block;
-  overflow: hidden;
-  padding: 0 0.08em 0.14em;
-  margin: 0 -0.08em -0.14em;
-}
-
 /* WetInk draws the glyphs onto a canvas over the text, so the text itself goes invisible while it
    stays selectable and announced. Print gets the real text back, because the canvas does not go. */
 [data-wet-ink='on'] {
