@@ -17,7 +17,7 @@ const home = tv({
     sheet: 'sticky top-0 z-0 focus-within:z-50',
     // Rides over the pinned hero, so it needs its own ground and a layer above one that is
     // positioned. Everything below the hero travels together, so one wrapper covers it.
-    over: 'relative z-10 bg-paper',
+    over: 'relative z-10 -mx-gutter bg-paper px-gutter',
   },
 });
 
