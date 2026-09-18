@@ -39,3 +39,6 @@ yarn-error.log*
 
 # Claude Code's local config, and the git worktrees it keeps under it
 .claude/
+
+# shader teaching workspace (local only)
+learning/
