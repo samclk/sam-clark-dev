@@ -1,6 +1,5 @@
 import { tv } from 'tailwind-variants';
 import { Clock } from '@/components/Clock';
-import { HideOnScroll } from '@/components/HideOnScroll';
 
 const SECTIONS = [
   { index: '01', label: 'Highlights', href: '#highlights' },
@@ -10,43 +9,31 @@ const SECTIONS = [
 ];
 
 /**
- * Sticky with no ground of its own. Under mix-blend-difference the source has to be white to land
- * near ink on paper, and the same white inverts to near-paper over a dark image, so the header stays
- * legible over anything it passes. Hierarchy comes from alpha rather than the grey tokens, which
- * would inverse: the darker the source, the lighter the result.
+ * Carries no position of its own. It shares the page's pinned sheet with the hero, which is what
+ * keeps the two from ever moving against each other, and that sheet owns the sticking and the
+ * layer. Centring and gutter come from the same place, so neither is repeated here.
  *
- * It retreats on the way down and comes back on the way up, because with no ground of its own it
- * collides with whatever it sits on. Keyboard focus brings it back regardless of scroll direction.
+ * It passes over nothing now, so it needs no blend and takes the ordinary ink tokens.
  */
 const siteHeader = tv({
   slots: {
-    root: 'sticky top-0 z-50 mx-auto flex max-w-[1440px] items-center gap-10 px-gutter pt-10 pb-4 text-white mix-blend-difference transition-transform duration-[420ms] ease-brand focus-within:translate-y-0',
+    root: 'flex items-center gap-10 pt-10 pb-4 text-ink',
     wordmark: 'ln mono font-medium tracking-[0.14em]',
     nav: 'ml-auto hidden gap-[30px] nav:flex',
     link: 'group ln py-3.5 mono',
-    index: 'mr-[7px] text-white/55 transition-colors duration-[420ms] group-hover:text-white',
+    index: 'mr-[7px] text-faint transition-colors duration-[420ms] group-hover:text-ink',
     // A standing call to action, not a position indicator: it carries no index because it never
     // tracks the section you are in.
-    pill: 'ml-auto rounded-full border border-white/35 px-4 py-3.5 mono nav:hidden',
-    clock: 'hidden min-w-[168px] text-right mono text-white/70 clock:block',
-  },
-  variants: {
-    hidden: {
-      true: { root: '-translate-y-full' },
-      false: { root: 'translate-y-0' },
-    },
+    pill: 'ml-auto rounded-full border border-hairline px-4 py-3.5 mono nav:hidden',
+    clock: 'hidden min-w-[168px] text-right mono text-quiet clock:block',
   },
 });
 
-const { wordmark, nav, link, index, pill, clock } = siteHeader();
-
-// resolved here so tailwind-variants stays out of the client bundle; only the two strings cross over
-const SHOWN = siteHeader({ hidden: false }).root();
-const HIDDEN = siteHeader({ hidden: true }).root();
+const { root, wordmark, nav, link, index, pill, clock } = siteHeader();
 
 export const SiteHeader = () => {
   return (
-    <HideOnScroll className={SHOWN} hiddenClassName={HIDDEN}>
+    <header className={root()}>
       <a className={wordmark()} href="#top">
         CLK Studio
       </a>
@@ -67,6 +54,6 @@ export const SiteHeader = () => {
       <p className={clock()}>
         Local time <Clock />
       </p>
-    </HideOnScroll>
+    </header>
   );
 };
