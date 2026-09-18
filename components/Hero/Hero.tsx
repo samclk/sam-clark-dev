@@ -11,7 +11,7 @@ const META = [
 
 const hero = tv({
   slots: {
-    root: 'pt-[clamp(72px,10vw,150px)]',
+    root: 'pt-[clamp(72px,10vw,150px)] tall:sticky tall:top-0',
     status: 'flex items-center gap-3 mono text-quiet',
     dot: 'size-[7px] animate-status-pulse rounded-full bg-status',
     title:

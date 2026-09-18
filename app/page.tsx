@@ -9,9 +9,16 @@ import { SiteFooter } from '@/components/SiteFooter';
 
 /* WetInk draws its canvas BLEED px outside the text on every side, and an absolutely positioned
    box still counts towards scrollable overflow. Past the gutter that is a horizontal scrollbar. */
-const home = tv({ slots: { main: 'mx-auto max-w-[1440px] overflow-x-clip px-gutter' } });
+const home = tv({
+  slots: {
+    main: 'mx-auto max-w-[1440px] overflow-x-clip px-gutter',
+    // Rides over the pinned hero, so it needs its own ground and a layer above one that is
+    // positioned. Everything below the hero travels together, so one wrapper covers it.
+    over: 'relative z-10 bg-paper',
+  },
+});
 
-const { main } = home();
+const { main, over } = home();
 
 export default function Home() {
   return (
@@ -19,10 +26,12 @@ export default function Home() {
       <SiteHeader />
       <main className={main()}>
         <Hero />
-        <Mosaic />
-        <WorkList />
-        <About />
-        <Contact />
+        <div className={over()}>
+          <Mosaic />
+          <WorkList />
+          <About />
+          <Contact />
+        </div>
       </main>
       <SiteFooter />
     </>
