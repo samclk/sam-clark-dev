@@ -4,9 +4,8 @@ import { WetInk } from '@/components/WetInk';
 
 const META = [
   { term: 'Who', detail: 'Sam Clark, Creative Developer' },
-  { term: 'Currently', detail: 'Contracting at Neverbland' },
+  { term: 'Currently', detail: 'Senior Developer at Neverbland' },
   { term: 'Based', detail: 'UK, working remotely' },
-  { term: 'Available', detail: 'October 2026' },
 ];
 
 /**
@@ -53,7 +52,7 @@ const HeroRoot = () => {
       <Reveal>
         <p className={status()}>
           <span className={dot()} aria-hidden="true" />
-          Available from October 2026
+          Currently building at Neverbland
         </p>
       </Reveal>
 
