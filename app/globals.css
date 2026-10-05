@@ -79,6 +79,11 @@
     --color-tile: #201f18;
     --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 30px -12px rgb(0 0 0 / 0.8);
   }
+
+  /* grain reads stronger against the dark ground, so it backs off to look the same */
+  body::after {
+    opacity: 0.05;
+  }
 }
 
 @layer base {
@@ -93,6 +98,28 @@
   body {
     @apply bg-paper font-sans text-body text-ink antialiased;
     line-height: 1.5;
+  }
+
+  /* Film grain over everything. A fixed element rather than background-attachment: fixed, which iOS
+     ignores. The 256px tile is drawn at 128px so each grain is one device pixel on a 2x screen. */
+  body::after {
+    content: '';
+    position: fixed;
+    /* overhangs by one tile, so the grain keyframes never shift far enough to expose an edge */
+    inset: -128px;
+    z-index: 9999;
+    pointer-events: none;
+    background: url('/noise.png') repeat;
+    background-size: 128px;
+    opacity: 0.07;
+    /* transform only, so the compositor moves the layer and nothing repaints */
+    will-change: transform;
+    animation: grain 1s steps(1) infinite;
+
+    /* a fixed element repeats on every printed page */
+    @media print {
+      display: none;
+    }
   }
 
   ::selection {
@@ -182,6 +209,34 @@
   @supports (animation-timeline: scroll()) {
     animation: scroll-progress linear both;
     animation-timeline: scroll(root block);
+  }
+}
+
+/* steps(1) holds each offset for its slot, so eight stops make eight grain frames a second */
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  12.5% {
+    transform: translate(-61px, 37px);
+  }
+  25% {
+    transform: translate(43px, -88px);
+  }
+  37.5% {
+    transform: translate(-97px, -19px);
+  }
+  50% {
+    transform: translate(76px, 54px);
+  }
+  62.5% {
+    transform: translate(-28px, 101px);
+  }
+  75% {
+    transform: translate(112px, -47px);
+  }
+  87.5% {
+    transform: translate(-53px, -73px);
   }
 }
 
