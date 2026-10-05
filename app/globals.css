@@ -100,10 +100,9 @@
     line-height: 1.5;
   }
 
-  /* Film grain over everything. A fixed element rather than background-attachment: fixed, which iOS
-     ignores. The 256px tile is drawn at 128px so each grain is one device pixel on a 2x screen. */
+  /* Film grain over everything. The 256px tile is drawn at 128px so each grain is one device pixel
+     on a 2x screen. */
   body::after {
-    content: '';
     position: fixed;
     /* overhangs by one tile, so the grain keyframes never shift far enough to expose an edge */
     inset: -128px;
@@ -115,6 +114,12 @@
     /* transform only, so the compositor moves the layer and nothing repaints */
     will-change: transform;
     animation: grain 1s steps(1) infinite;
+
+    /* Mouse-driven screens only. Without content the element is never created, so touch devices
+       carry no layer and no animation, whatever their width. */
+    @media (hover: hover) and (pointer: fine) {
+      content: '';
+    }
 
     /* a fixed element repeats on every printed page */
     @media print {
