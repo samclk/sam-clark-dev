@@ -88,6 +88,9 @@
     /* so scrollbars, form controls and the overscroll gutter follow the palette too */
     color-scheme: light dark;
     scroll-behavior: smooth;
+    /* Chrome restores a reload by anchor element, and the sticky hero and unrevealed Reveal blocks
+       sit elsewhere on load than when saved, so a reload from the top landed hundreds of px down. */
+    overflow-anchor: none;
   }
 
   body {
